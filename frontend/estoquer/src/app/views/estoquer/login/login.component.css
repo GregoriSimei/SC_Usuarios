@@ -1,5 +1,5 @@
 .content{
-    background: #f85151 url("https://www.wallpapertip.com/wmimgs/89-895983_food-4k.jpg") no-repeat;
+    background: #4e4e4e;
     background-size: 100% 100%;
     width: 100%;
     height: 100vh;
@@ -12,13 +12,36 @@
 }
 
 .form{
-    width: 60vh;
-    height: 70vh;
-    background: rgba(255, 255, 255, 0.233);
+    padding: 10px 0px 10px 0px;
+    width: 40vh;
+    height: auto;
+    background: rgb(255, 255, 255);
     border-radius: 15px 25px 15px 25px;
-    border: solid #f8515162;
+    border: solid #85858562;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .full-width {
-    width: 100%;
+    width: 80%;
+    margin: 0px 10px 0px 10px;
+}
+
+.btn{
+    border: none;
+    padding: 5px 15px;
+}
+
+.btnLogin{
+    color: white;
+    background-color: #4e4e4ea6;
+    border-radius: 5px 10px;
+    transition: 1s;
+}
+
+.btnLogin:hover{
+    background-color: #4e4e4e;
+    border-radius: 10px 5px;
 }

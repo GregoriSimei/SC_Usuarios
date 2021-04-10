@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logon(){
-    console.log("logon");
+    this.router.navigate(['logon']);
   }
 
 }

@@ -16,6 +16,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 
 import { AppRoutingModule } from './app-routing.module';
+import { LogonComponent } from './views/estoquer/logon/logon.component';
 ;
 
 
@@ -26,7 +27,8 @@ import { AppRoutingModule } from './app-routing.module';
     HeaderComponent,
     NavComponent,
     InitialComponent,
-    LoginComponent
+    LoginComponent,
+    LogonComponent
   ],
   imports: [
     AppRoutingModule,
