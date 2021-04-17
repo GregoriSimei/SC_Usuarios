@@ -10,6 +10,7 @@ import org.hibernate.service.ServiceRegistry;
 
 import model.Endereco;
 import model.Pessoa;
+import model.Request;
 import model.Usuario;
 
 public class HibernateUtil {
@@ -50,7 +51,8 @@ public class HibernateUtil {
 				  configuration.addAnnotatedClass(Endereco.class);
 				  configuration.addAnnotatedClass(Pessoa.class);
 				  configuration.addAnnotatedClass(Usuario.class);
-				 
+				  configuration.addAnnotatedClass(Request.class);
+
 
 				ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
 						.applySettings(configuration.getProperties()).build();

@@ -1,6 +1,5 @@
 package controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,14 +14,13 @@ import dao.PessoaDAO;
 import dao.UsuarioDAO;
 import model.Pessoa;
 import model.Usuario;
-
 @RestController
 public class ControllerUsuario {
-	@Autowired
-	PessoaDAO dao;
-	UsuarioDAO userdao;
-	EnderecoDAO enddao;
-	UsuarioBusiness ubus;
+	PessoaDAO dao = new PessoaDAO();
+	EnderecoDAO enddao = new EnderecoDAO();
+	UsuarioBusiness userbus = new UsuarioBusiness();
+	
+	
 	
 
 	@RequestMapping("/cadastraruser")
@@ -30,7 +28,7 @@ public class ControllerUsuario {
 		Gson gson = new Gson();
 		Pessoa p = null;
 		p = gson.fromJson(Pessoa, Pessoa.class);
-		userdao.Save(ubus.Validacao(p.getUsuario()));
+		userbus.Validacao(p.getUsuario());	// Validacao = deixa ativo como false e cria a request
 		enddao.Save(p.getEndereco());
 		dao.Save(p);
 		
