@@ -8,27 +8,38 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
 
 import dao.EntidadeBase;
 
 @Entity
-@Table(name = "Pessoas")
 public class Pessoa implements EntidadeBase{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
-	private String CPF;
+	public String CPF;
 	private String Nome;
 	private String Celular;
 	private String DataNascimento;
 	@OneToOne(fetch = FetchType.LAZY)
 	private Endereco Endereco;
+	@OneToOne(fetch = FetchType.LAZY)
+	private Usuario Usuario;
+	
+	public Endereco getEndereco() {
+		return Endereco;
+	}
+	public void setEndereco(Endereco endereco) {
+		Endereco = endereco;
+	}
+	public Usuario getUsuario() {
+		return Usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		Usuario = usuario;
+	}
 	public Pessoa() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -66,12 +77,6 @@ public class Pessoa implements EntidadeBase{
 	}
 	public void setDataNascimento(String dataNascimento) {
 		DataNascimento = dataNascimento;
-	}
-	public Endereco getEndereço() {
-		return Endereco;
-	}
-	public void setEndereço(Endereco endereco) {
-		Endereco = endereco;
 	}
 	
 	
