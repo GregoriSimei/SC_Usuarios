@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.crm.api.models.Person;
 import com.crm.api.models.User;
 import com.crm.api.models.UserRequest;
+import com.crm.api.repositories.AddressRepository;
+import com.crm.api.repositories.PersonRepository;
 import com.crm.api.repositories.UserRepository;
 import com.crm.api.repositories.UserRequestRepository;
 
@@ -22,6 +24,12 @@ public class UserRequestBusiness {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private AddressRepository addressRepository;
+	
+	@Autowired
+	private PersonRepository personRepository;
+	
 	
 	public UserRequest createRequest(Person person) {
 		
@@ -34,6 +42,10 @@ public class UserRequestBusiness {
 			response.setStatus("Pending Approval");
 			response.setPerson(person);
 			response.setCreation(new Date());
+			
+			addressRepository.save(person.getAddress());
+			personRepository.save(person);
+			response = userRequestRepository.save(response);
 		}
 		
 		return response;
@@ -87,12 +99,23 @@ public class UserRequestBusiness {
 			Date now = new Date();
 			response.setModification(now);
 			response.setStatus(request.getStatus());
+			User newUser = this.generateUser(response);
+			String requestStatus = response.getStatus();
+			
+			userRequestRepository.save(response);
+			
+			if(newUser != null && requestStatus.equalsIgnoreCase("Approved")) {
+				userRepository.save(newUser);
+				Person person = request.getPerson();
+				person.setUser(newUser);
+				personRepository.save(person);
+			}
 		}
 		
 		return response;
 	}
 
-	public User generateUser(UserRequest request) {
+	private User generateUser(UserRequest request) {
 		User newUser = null;
 		
 		String approval = request.getStatus();

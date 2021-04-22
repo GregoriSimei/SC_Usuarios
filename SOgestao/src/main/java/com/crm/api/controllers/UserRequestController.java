@@ -51,43 +51,13 @@ public class UserRequestController {
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public UserRequest salvaUsuario(@RequestBody Person person) {
-		UserRequest response = null;
-		UserRequest userRequest = userRequestBusiness.createRequest(person);
-		
-		if(userRequest != null) {
-			addressRepository.save(person.getAddress());
-			personRepository.save(person);
-			response = userRequestRepository.save(userRequest);
-		}
-		
+		UserRequest response = userRequestBusiness.createRequest(person);
 		return response;
 	}
 	
 	@PutMapping(consumes = "application/json", produces = "application/json")
 	public UserRequest approvalRequest(@RequestBody UserRequest request) {
-		boolean checkUser = true;
-		
-		UserRequest response = null;
-		
-		if(checkUser) {
-			response = userRequestBusiness.validateRequest(request);
-			User newUser = userRequestBusiness.generateUser(response);
-			String requestStatus = response.getStatus();
-			System.out.println(requestStatus);
-			
-			if(response != null) {
-				userRequestRepository.save(response);
-			}
-			
-			if(newUser != null && requestStatus.equalsIgnoreCase("Approved")) {
-				System.out.println("passou aqui");
-				userRepository.save(newUser);
-				Person person = request.getPerson();
-				person.setUser(newUser);
-				personRepository.save(person);
-			}
-		}
-		
+		UserRequest response = userRequestBusiness.validateRequest(request);	
 		return response;
 	}
 
