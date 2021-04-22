@@ -163,4 +163,9 @@ public class UserRequestBusiness {
 		return newUsername;
 	}
 
+	public Iterable<UserRequest> getAll() {
+		Iterable<UserRequest> response = userRequestRepository.findAll();
+		return response;
+	}
+
 }
