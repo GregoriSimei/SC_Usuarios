@@ -1,5 +1,7 @@
 package com.crm.api.models;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +22,12 @@ public class UserRequest {
 	
 	@Column(name = "status")
 	private String status;
+	
+	@Column(name = "creation")
+	private Date creation;
+	
+	@Column(name = "modification")
+	private Date modification;
 	
 	@OneToOne
 	@JoinColumn(name = "pe_id")
@@ -47,5 +55,21 @@ public class UserRequest {
 	
 	public void setPerson(Person person) {
 		this.person = person;
+	}
+
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
+	public Date getModification() {
+		return modification;
+	}
+
+	public void setModification(Date modification) {
+		this.modification = modification;
 	}
 }
