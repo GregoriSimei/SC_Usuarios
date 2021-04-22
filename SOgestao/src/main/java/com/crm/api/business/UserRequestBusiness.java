@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.crm.api.models.Person;
 import com.crm.api.models.User;
 import com.crm.api.models.UserRequest;
+import com.crm.api.repositories.AddressRepository;
+import com.crm.api.repositories.PersonRepository;
+import com.crm.api.repositories.UserRepository;
 import com.crm.api.repositories.UserRequestRepository;
 
 @Service
@@ -17,6 +20,15 @@ public class UserRequestBusiness {
 	
 	@Autowired
 	private UserRequestRepository userRequestRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private AddressRepository addressRepository;
+	
+	@Autowired
+	private PersonRepository personRepository;
 	
 	
 	public UserRequest createRequest(Person person) {
@@ -30,6 +42,10 @@ public class UserRequestBusiness {
 			response.setStatus("Pending Approval");
 			response.setPerson(person);
 			response.setCreation(new Date());
+			
+			addressRepository.save(person.getAddress());
+			personRepository.save(person);
+			response = userRequestRepository.save(response);
 		}
 		
 		return response;
@@ -49,7 +65,6 @@ public class UserRequestBusiness {
 	private boolean checkBirthDate(Date date) {
 		
 		boolean check = false;
-		Date now = new Date();
 		
 		int tolerance = 200;
 		int adjust = 1900;
@@ -83,20 +98,40 @@ public class UserRequestBusiness {
 		if(response != null) {
 			Date now = new Date();
 			response.setModification(now);
+			response.setStatus(request.getStatus());
+			User newUser = this.generateUser(response);
+			String requestStatus = response.getStatus();
+			
+			userRequestRepository.save(response);
+			
+			if(newUser != null && requestStatus.equalsIgnoreCase("Approved")) {
+				userRepository.save(newUser);
+				Person person = request.getPerson();
+				person.setUser(newUser);
+				personRepository.save(person);
+			}
 		}
 		
 		return response;
 	}
 
-	public User generateUser(UserRequest request) {
-		Person person = request.getPerson();
-		String username = this.generateUsername(person);
-		String password = this.generatePassword(person);
+	private User generateUser(UserRequest request) {
+		User newUser = null;
 		
-		User newUser = new User();
-		newUser.setActive(true);
-		newUser.setPassword(password);
-		newUser.setUsername(username);
+		String approval = request.getStatus();
+		
+		if(approval.equalsIgnoreCase("Approved")){
+			Person person = request.getPerson();
+			String username = this.generateUsername(person);
+			String password = this.generatePassword(person);
+			
+			String usernameAvaliable = this.checkUsername(username, username, 1);
+			
+			newUser = new User();
+			newUser.setActive(true);
+			newUser.setPassword(password);
+			newUser.setUsername(usernameAvaliable);
+		}
 		
 		return newUser;
 	}
@@ -115,6 +150,17 @@ public class UserRequestBusiness {
 		int end = this.getCurrentYear();
 		
 		return begin + end;
+	}
+	
+	private String checkUsername(String username, String newUsername, int num) {
+		
+		User userDB = userRepository.findByUsername(newUsername);
+		
+		if(userDB != null) {
+			newUsername = this.checkUsername(username, username + num, num + 1);
+		}
+		
+		return newUsername;
 	}
 
 }
