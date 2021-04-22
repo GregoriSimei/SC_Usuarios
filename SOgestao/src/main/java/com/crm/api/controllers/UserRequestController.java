@@ -71,16 +71,20 @@ public class UserRequestController {
 		
 		if(checkUser) {
 			response = userRequestBusiness.validateRequest(request);
-			User newUser = userRequestBusiness.generateUser(request);
+			User newUser = userRequestBusiness.generateUser(response);
+			String requestStatus = response.getStatus();
+			System.out.println(requestStatus);
 			
 			if(response != null) {
 				userRequestRepository.save(response);
 			}
 			
-			if(newUser != null) {
-				//boolean checkNewUser = userBusiness.validateNewUser(newUser);
-				//if(checkNewUser) {userRepository.save(newUser);}
+			if(newUser != null && requestStatus.equalsIgnoreCase("Approved")) {
+				System.out.println("passou aqui");
 				userRepository.save(newUser);
+				Person person = request.getPerson();
+				person.setUser(newUser);
+				personRepository.save(person);
 			}
 		}
 		
