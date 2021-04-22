@@ -31,6 +31,9 @@ public class User {
 	@Column(name = "active")
 	private Boolean active;
 	
+	@Column(name = "level")
+	private String level;
+	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "br_id")
 	private Branch branch;
@@ -81,5 +84,13 @@ public class User {
 
 	public void setBranch(Branch branch) {
 		this.branch = branch;
+	}
+
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
 	}
 }

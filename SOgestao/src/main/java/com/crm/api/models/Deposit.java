@@ -31,7 +31,7 @@ public class Deposit {
 	private double totalValue;
 	
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "it_id")
+	@JoinColumn(name = "dp_id")
 	@Fetch(FetchMode.JOIN)
 	private List<Item> items;
 	
