@@ -20,6 +20,9 @@ public class Person {
 	@Column(name = "id")
 	private long id;
 	
+	@Column(name = "cpf")
+	private String cpf;
+	
 	@Column(name = "name")
 	private String name;
 	
@@ -83,5 +86,13 @@ public class Person {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 }
