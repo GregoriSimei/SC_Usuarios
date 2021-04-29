@@ -23,8 +23,8 @@ public class DepositController {
 	private DepositBusiness depositBusiness;
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public Branch postDeposit(@RequestBody List<Deposit> listdep, @RequestParam ("id") long idfilial ) {
-		return depositBusiness.saveDeposit(listdep, idfilial);
+	public Branch postDeposit(@RequestBody Deposit deposit, @RequestParam ("id") long idfilial ) {
+		return depositBusiness.saveDeposit(deposit, idfilial);
 
 	}
 

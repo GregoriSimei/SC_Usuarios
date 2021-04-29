@@ -30,6 +30,7 @@ public class Branch {
 	@OneToOne
 	@JoinColumn(name = "ad_id")
 	private Address address;
+	
 	@OneToMany
 	@JoinColumn(name = "dp_id")
 	@Fetch(FetchMode.JOIN)
@@ -61,6 +62,10 @@ public class Branch {
 
 	public void setDeposits(List<Deposit> deposits) {
 		this.deposits = deposits;
+	}
+	
+	public void setDeposit(Deposit deposit) {
+		this.deposits.add(deposit);
 	}
 
 	public void setAddress(Address address) {
