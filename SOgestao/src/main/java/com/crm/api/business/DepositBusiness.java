@@ -24,8 +24,23 @@ public class DepositBusiness {
 	public Branch saveDeposit(Deposit deposit, long idfilial) {
 		
 		Branch branch = branchRepository.findById(idfilial);
-		branch.setDeposit(deposit);
-		depositRepository.save(deposit);
+		
+		List<Deposit> deposits = branch.getDeposits();
+		Long idDeposit = deposit.getId();
+		boolean teste = idDeposit == null || idDeposit == 0;
+		
+		if(!teste) {
+			for(Deposit depositCompare : deposits) {
+				if(depositCompare.getId() == idDeposit) {
+					depositCompare.setName(deposit.getName());
+				}
+			}
+		}
+		else {
+			branch.setDeposit(deposit);
+			depositRepository.save(deposit);
+		}
+		
 		branchRepository.save(branch);
 		
 		return branch;
