@@ -55,4 +55,7 @@ public class Company {
 		this.branches = branches;
 	}
 
+	public void setBranch(Branch branch) {
+		this.branches.add(branch);
+	}
 }
