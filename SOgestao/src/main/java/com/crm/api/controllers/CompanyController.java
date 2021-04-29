@@ -28,18 +28,20 @@ public class CompanyController {
 		return response;
 	}
 	
-	@PutMapping( consumes = "application/json", produces = "application/json")
-	public Company putCompany(@RequestBody List<Branch> branches, @RequestParam("id") long id ) {
-		Company response = companyBusiness.setBranchesById(branches, id);
+	@PutMapping(consumes = "application/json", produces = "application/json")
+	public Company putCompany(@RequestBody Branch branch, @RequestParam(name = "id") long id ) {
+		Company response = companyBusiness.setBranchesById(branch, id);
 		
 		return response;
 	}
+	
 	@RequestMapping("/branch/update")
 	@PutMapping(consumes = "application/json", produces = "application/json")
 	public Branch updateBranch(@RequestBody Branch branch) {
 		Branch response = companyBusiness.updateBranch(branch);
 		return response;
 	}
+	
 	@RequestMapping("/branch/delete")
 	@PutMapping(consumes = "application/json", produces = "application/json")
 	public Branch deleteBranch(@RequestBody Branch branch) {
