@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,8 +24,8 @@ public class Invoice {
 	@Column(name = "id")
 	private long id;
 	
-	@Column(name = "key")
-	private String key;
+	@Column(name = "invoice_key")
+	private String invoice_key;
 	
 	@Column(name = "number")
 	private String number;
@@ -41,9 +42,8 @@ public class Invoice {
 	@Column(name = "value")
 	private double value;
 	
-	@OneToMany
-	@JoinColumn(name = "movs_id")
-	@Fetch(FetchMode.JOIN)
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "inv_id")
 	private List<Movement> Movements;
 	
 	@OneToOne
@@ -59,11 +59,11 @@ public class Invoice {
 	}
 
 	public String getKey() {
-		return key;
+		return invoice_key;
 	}
 
 	public void setKey(String key) {
-		this.key = key;
+		this.invoice_key = key;
 	}
 
 	public String getNumber() {
