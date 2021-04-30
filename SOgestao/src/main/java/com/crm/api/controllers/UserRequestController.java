@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.api.business.UserRequestBusiness;
 import com.crm.api.models.Person;
 import com.crm.api.models.UserRequest;
+import com.crm.api.service.UserRequestBusiness;
 
 @RestController
 @RequestMapping("/user_request")

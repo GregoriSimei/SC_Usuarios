@@ -1,4 +1,4 @@
-package com.crm.api.business;
+package com.crm.api.service;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import com.crm.api.repositories.CompanyRepository;
 
 @Service
 @Configurable
-public class CompanyBusiness {
+public class CompanyService {
 	
 	@Autowired
 	private CompanyRepository companyRepository;

@@ -2,6 +2,7 @@ package com.crm.api.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +22,9 @@ public class Movement {
 	@Column(name = "type")
 	private String type;
 	
+	@Column(name = "subtype")
+	private String subType;
+	
 	@Column(name = "description")
 	private String description;
 	
@@ -31,9 +35,26 @@ public class Movement {
 	@Column(name = "qtd")
 	private int qtd;
 	
-	@Column(name = "doc")
-	private String doc;
+	@OneToOne
+	@JoinColumn(name = "doc_id")
+	private Document doc;
 	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dp_id")
+	private Deposit deposit;
+	
+	@OneToOne
+	@JoinColumn(name = "us_id")
+	private User user;
+	
+	public Deposit getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(Deposit deposit) {
+		this.deposit = deposit;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -74,11 +95,29 @@ public class Movement {
 		this.qtd = qtd;
 	}
 	
-	public String getDoc() {
+	public Document getDoc() {
 		return doc;
 	}
 	
-	public void setDoc(String doc) {
+	public void setDoc(Document doc) {
 		this.doc = doc;
 	}
+
+	public String getSubType() {
+		return subType;
+	}
+
+	public void setSubType(String subType) {
+		this.subType = subType;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	
 }

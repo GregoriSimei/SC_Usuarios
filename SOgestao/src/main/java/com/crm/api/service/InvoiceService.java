@@ -1,4 +1,4 @@
-package com.crm.api.business;
+package com.crm.api.service;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import com.crm.api.repositories.InvoiceRepository;
 
 @Service
 @Configurable
-public class InvoiceBusiness {
+public class InvoiceService {
 	@Autowired
 	private InvoiceRepository invoiceRepository;
 	@Autowired
@@ -24,7 +24,7 @@ public class InvoiceBusiness {
 	public Invoice saveInvoice(List<Movement> movs, long branchid ) {
 		Invoice inv = null;
 		Branch branch = branchRepository.findById(branchid);
-		inv.setBranch(branch);
+		// inv.setBranch(branch);
 		inv.setMovements(movs);
 		Invoice i = invoiceRepository.save(inv);
 		return i;

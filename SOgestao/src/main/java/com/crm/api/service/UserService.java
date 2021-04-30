@@ -1,4 +1,4 @@
-package com.crm.api.business;
+package com.crm.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -9,7 +9,7 @@ import com.crm.api.repositories.UserRepository;
 
 @Service
 @Configurable
-public class UserBusiness {
+public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,9 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "Invoices")
@@ -41,14 +39,13 @@ public class Invoice {
 	@Column(name = "value")
 	private double value;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "movs_id")
-	@Fetch(FetchMode.JOIN)
 	private List<Movement> Movements;
 	
 	@OneToOne
-	@JoinColumn(name = "branch_id")
-	private Branch Branch;
+    @JoinColumn(name = "branch_id")
+    private Branch Branch;
 
 	public long getId() {
 		return id;
