@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import com.crm.api.models.Branch;
-import com.crm.api.models.Company;
 import com.crm.api.models.Invoice;
 import com.crm.api.models.Movement;
 import com.crm.api.repositories.BranchRepository;
