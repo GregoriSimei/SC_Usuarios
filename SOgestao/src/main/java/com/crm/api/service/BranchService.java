@@ -25,7 +25,6 @@ public class BranchService {
 	
 	public Company setBranchesById(Branch branch,long id) {
 		Company response = companyRepository.findById(id);
-		System.out.println(response);
 		addressRepository.save(branch.getAddress());
 		branchRepository.save(branch);
 		response.setBranch(branch);

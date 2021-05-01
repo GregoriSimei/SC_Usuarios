@@ -1,7 +1,5 @@
 package com.crm.api.business;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
@@ -10,35 +8,33 @@ import com.crm.api.models.Deposit;
 import com.crm.api.models.Document;
 import com.crm.api.models.Item;
 import com.crm.api.models.Movement;
-import com.crm.api.models.User;
-import com.crm.api.repositories.DepositRepository;
 import com.crm.api.repositories.MovementRepository;
 import com.crm.api.service.DepositService;
+import com.crm.api.service.DocumentService;
 import com.crm.api.service.ItemService;
+import com.crm.api.service.MovementService;
 
 @Service
 @Configurable
 public class MovementBusiness {
 	
 	@Autowired
-	private MovementRepository movementRepository;
+	private DepositService depositService;
 	
 	@Autowired
-	private DepositService depositService;
+	private MovementService movementService;
 	
 	@Autowired
 	private ItemService itemService;
 	
-	public List<Movement> getAll(Long id) {
-		List<Movement> movements = movementRepository.findByDepositId(id);
-		return movements;
-	}
+	@Autowired
+	private DocumentService documentService;
 
 	public Movement saveMovement(Movement movement) {
 		
 		Deposit deposit = movement.getDeposit();
 		Item item = movement.getItem();
-		User user = movement.getUser();
+		Document document = this.movementService.DocumentGenerate(movement);
 		
 		boolean testDeposit = deposit.getId() != 0;
 		if(testDeposit) {
@@ -48,10 +44,20 @@ public class MovementBusiness {
 		
 		boolean testItem = item.getId() != 0;
 		if(testItem) {
-			item = this.adjustItem(movement);
+			item = this.itemService.getItemById(item.getId());
 		}
 		
+		movement.setItem(item);
+		item = this.adjustItem(movement);
 		
+		this.documentService.save(document);
+		item = this.itemService.save(item);
+		
+		deposit.setItem(item);
+		
+		movement.setDoc(document);
+		movement.setDeposit(deposit);
+		movement = this.movementService.save(movement);
 		
 		return movement;
 	}
@@ -60,15 +66,20 @@ public class MovementBusiness {
 		String type = movement.getType();
 		int qtd = movement.getQtd();
 		Item item = movement.getItem();
+		int qtdItem = item.getQtd();
 		
-		item = this.itemService.getItemById(item.getId());
-		
-		if(type.equalsIgnoreCase("Incoming")) {
-			
+		switch (type){
+			case "Incoming":
+				qtdItem += qtd;
+				break;
+			case "Output":
+				qtdItem -= qtd;
+				break;
 		}
 		
+		item.setQtd(qtdItem);
 		
-		return null;
+		return item;
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.crm.api.controllers;
+	package com.crm.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.crm.api.models.Branch;
 import com.crm.api.models.Company;
-import com.crm.api.repositories.AddressRepository;
-import com.crm.api.repositories.BranchRepository;
 import com.crm.api.service.BranchService;
-import com.crm.api.service.CompanyService;
 
 @RestController
 @RequestMapping("/branch")
@@ -26,7 +23,6 @@ public class BranchController {
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public Company putCompany(@RequestBody Branch branch, @RequestParam(name = "id") long id ) {
 		Company response = branchService.setBranchesById(branch, id);
-		
 		return response;
 	}
 	

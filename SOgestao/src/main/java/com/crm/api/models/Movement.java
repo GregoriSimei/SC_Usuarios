@@ -28,7 +28,7 @@ public class Movement {
 	@Column(name = "description")
 	private String description;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pd_id")
 	private Item item;
 	
@@ -39,7 +39,7 @@ public class Movement {
 	@JoinColumn(name = "doc_id")
 	private Document doc;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "dp_id")
 	private Deposit deposit;
 	

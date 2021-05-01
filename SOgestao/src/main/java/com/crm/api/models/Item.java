@@ -1,5 +1,7 @@
 package com.crm.api.models;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +13,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Items")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Item {
 	
 	@Id
@@ -33,6 +34,15 @@ public class Item {
 	
 	@Column(name = "avgprice")
 	private double avgPrice;
+	
+	@Column(name = "validity")
+	private Date validity;
+	
+	@Column(name = "qtd")
+	private int qtd;
+	
+	@Column(name = "partitionable")
+	private boolean partitionable;
 	
 	public long getId() {
 		return id;
@@ -80,5 +90,29 @@ public class Item {
 	
 	public void setAvgPrice(double avgPrice) {
 		this.avgPrice = avgPrice;
+	}
+
+	public Date getValidity() {
+		return validity;
+	}
+
+	public void setValidity(Date validity) {
+		this.validity = validity;
+	}
+
+	public int getQtd() {
+		return qtd;
+	}
+
+	public void setQtd(int qtd) {
+		this.qtd = qtd;
+	}
+
+	public boolean isPartitionable() {
+		return partitionable;
+	}
+
+	public void setPartitionable(boolean partitionable) {
+		this.partitionable = partitionable;
 	}
 }
