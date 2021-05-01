@@ -14,7 +14,7 @@ import com.crm.api.models.Company;
 import com.crm.api.service.BranchService;
 
 @RestController
-@RequestMapping("/company")
+@RequestMapping("/branch")
 public class BranchController {
 	
 	@Autowired
