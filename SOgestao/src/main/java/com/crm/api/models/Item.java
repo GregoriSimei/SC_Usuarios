@@ -26,6 +26,9 @@ public class Item {
 	@Column(name = "outId")
 	private String outId;
 	
+	@Column(name = "type")
+	private String type;
+	
 	@Column(name = "name")
 	private String name;
 	
@@ -114,5 +117,13 @@ public class Item {
 
 	public void setPartitionable(boolean partitionable) {
 		this.partitionable = partitionable;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }
