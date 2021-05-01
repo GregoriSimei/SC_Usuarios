@@ -39,7 +39,7 @@ public class Movement {
 	@JoinColumn(name = "doc_id")
 	private Document doc;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "dp_id")
 	private Deposit deposit;
 	
