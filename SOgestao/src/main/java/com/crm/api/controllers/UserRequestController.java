@@ -20,7 +20,7 @@ public class UserRequestController {
 	@Autowired
 	private UserRequestBusiness userRequestBusiness;
 	
-	@GetMapping(consumes = "application/json", produces = "application/json")
+	@GetMapping(produces = "application/json")
 	public Iterable<UserRequest> getAll(){
 		Iterable<UserRequest> response = userRequestBusiness.getAll();
 		return response;

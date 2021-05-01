@@ -66,4 +66,8 @@ public class Deposit {
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
+
+	public void setItem(Item item) {
+		this.items.add(item);
+	}
 }

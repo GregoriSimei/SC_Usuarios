@@ -18,6 +18,11 @@ public class ItemService {
 		Item item = this.itemRepository.findById(id).get();
 		return item;
 	}
+
+	public Item save(Item item) {		
+		item = this.itemRepository.save(item);
+		return item;
+	}
 	
 	
 	

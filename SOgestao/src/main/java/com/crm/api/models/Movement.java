@@ -28,7 +28,7 @@ public class Movement {
 	@Column(name = "description")
 	private String description;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pd_id")
 	private Item item;
 	
