@@ -1,4 +1,4 @@
-package com.crm.api.business;
+package com.crm.api.service;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import com.crm.api.repositories.DepositRepository;
 
 @Service
 @Configurable
-public class DepositBusiness {
+public class DepositService {
 	
 	@Autowired
 	private DepositRepository depositRepository;
@@ -44,5 +44,10 @@ public class DepositBusiness {
 		branchRepository.save(branch);
 		
 		return branch;
+	}
+	
+	public Deposit getById(long id) {
+		Deposit deposit = depositRepository.findById(id);
+		return deposit;
 	}
 }

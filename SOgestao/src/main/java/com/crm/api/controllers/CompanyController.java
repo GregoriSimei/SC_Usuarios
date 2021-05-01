@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.api.business.CompanyBusiness;
 import com.crm.api.models.Branch;
 import com.crm.api.models.Company;
+import com.crm.api.service.CompanyService;
 
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
 	
 	@Autowired
-	private CompanyBusiness companyBusiness;
+	private CompanyService companyBusiness;
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public Company postCompany(@RequestBody Company company) {

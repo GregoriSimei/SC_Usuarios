@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.api.business.CompanyBusiness;
-import com.crm.api.business.InvoiceBusiness;
 import com.crm.api.models.Branch;
 import com.crm.api.models.Deposit;
 import com.crm.api.models.Invoice;
 import com.crm.api.models.Movement;
+import com.crm.api.service.CompanyService;
+import com.crm.api.service.InvoiceService;
 
 @RestController
 @RequestMapping("/invoice")
 public class InvoiceController {
 	@Autowired
-	private InvoiceBusiness invoiceBusiness;
+	private InvoiceService invoiceBusiness;
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public Invoice postInvoice(@RequestBody List<Movement> movs,
 			@RequestParam ("id") long branchid) {

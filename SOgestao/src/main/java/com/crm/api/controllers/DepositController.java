@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.api.business.CompanyBusiness;
-import com.crm.api.business.DepositBusiness;
 import com.crm.api.models.Branch;
 import com.crm.api.models.Company;
 import com.crm.api.models.Deposit;
+import com.crm.api.service.CompanyService;
+import com.crm.api.service.DepositService;
 
 @RestController
 @RequestMapping("/deposit")
 public class DepositController {
 	
 	@Autowired
-	private DepositBusiness depositBusiness;
+	private DepositService depositBusiness;
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public Branch postDeposit(@RequestBody Deposit deposit, @RequestParam ("id") long idfilial ) {

@@ -1,6 +1,6 @@
-package com.crm.api.business;
+package com.crm.api.service;
 
-public class UsuarioBusiness {
+public class UsuarioService {
 
 	
 	/*public Usuario Validacao(Usuario user) {

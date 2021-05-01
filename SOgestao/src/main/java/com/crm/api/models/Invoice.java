@@ -13,9 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 @Entity
 @Table(name = "Invoices")
 public class Invoice {
@@ -47,8 +44,8 @@ public class Invoice {
 	private List<Movement> Movements;
 	
 	@OneToOne
-	@JoinColumn(name = "branch_id")
-	private Branch Branch;
+    @JoinColumn(name = "branch_id")
+    private Branch Branch;
 
 	public long getId() {
 		return id;
