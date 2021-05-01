@@ -23,7 +23,6 @@ public class BranchController {
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public Company putCompany(@RequestBody Branch branch, @RequestParam(name = "id") long id ) {
 		Company response = branchService.setBranchesById(branch, id);
-		
 		return response;
 	}
 	
