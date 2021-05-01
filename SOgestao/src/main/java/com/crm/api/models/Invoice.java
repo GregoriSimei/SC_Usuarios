@@ -21,8 +21,8 @@ public class Invoice {
 	@Column(name = "id")
 	private long id;
 	
-	@Column(name = "key")
-	private String key;
+	@Column(name = "invoice_key")
+	private String invoice_key;
 	
 	@Column(name = "number")
 	private String number;
@@ -40,7 +40,7 @@ public class Invoice {
 	private double value;
 	
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "movs_id")
+	@JoinColumn(name = "inv_id")
 	private List<Movement> Movements;
 	
 	@OneToOne
@@ -56,11 +56,11 @@ public class Invoice {
 	}
 
 	public String getKey() {
-		return key;
+		return invoice_key;
 	}
 
 	public void setKey(String key) {
-		this.key = key;
+		this.invoice_key = key;
 	}
 
 	public String getNumber() {
