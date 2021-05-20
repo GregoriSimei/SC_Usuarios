@@ -28,7 +28,7 @@ public class ItemService {
 	private DepositRepository depositRepository;
 
 	public Item getItemById(long id) {
-		Item item = this.itemRepository.findById(id).get();
+		Item item = this.itemRepository.findById(id);
 		return item;
 	}
 
