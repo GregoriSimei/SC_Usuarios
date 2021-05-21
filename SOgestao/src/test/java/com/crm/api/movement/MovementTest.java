@@ -69,11 +69,32 @@ public class MovementTest {
 		response = movcontroll.postMovement(mov);
 		//assertEquals(mov.getItem().getQtd(), 0);
 		assertThat(mov.getItem().getQtd() < response.getQtd());
+	
+	}
+	
+	
+	@Test
+	void SaidaEstoque() {	
 		
-
+		Movement mov = new Movement();	
+		mov.setUser(uRepository.findByUsername("J2021"));
+		mov.setDeposit(depRepository.findById(11));
 		
+		Document doc = new Document();
+		doc.setContent("Tudo o que aconteceu na movimentaçao.txt");
+		doc.setName("Log movimentação x");
+		mov.setDoc(doc);
+		mov.setDescription("Movimentação de teste");
+		mov.setType("Output");	// Incoming = entrada de estoque |  Output = saida de estoque
+		mov.setSubType("teste");
 		
-		
+		mov.setItem(itemRepository.findById(13));
+		mov.setQtd(8);	//remove 8
+		Movement response = null;
+		response = movcontroll.postMovement(mov);
+		//assertEquals(mov.getItem().getQtd(), 0);
+		assertThat(mov.getItem().getQtd() > response.getQtd());
+	
 	}
 
 }
