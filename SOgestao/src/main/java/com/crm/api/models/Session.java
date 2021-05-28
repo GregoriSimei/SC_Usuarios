@@ -1,29 +1,28 @@
 package com.crm.api.models;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ItemsSale	")
-public class ItemSale {
-	
+@Table(name = "sessions")
+public class Session {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private long id;
 	
-	@OneToOne
-	@JoinColumn(name = "it_id")
-	private Item item;
+	@Column(name = "date")
+	private Date date;
 	
-	@Column(name = "qtd")
-	private int qtd;
+	@Column(name = "status")
+	private String status;
 
 	public long getId() {
 		return id;
@@ -33,19 +32,19 @@ public class ItemSale {
 		this.id = id;
 	}
 
-	public Item getItem() {
-		return item;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setItem(Item item) {
-		this.item = item;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-	public int getQtd() {
-		return qtd;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setQtd(int qtd) {
-		this.qtd = qtd;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }
