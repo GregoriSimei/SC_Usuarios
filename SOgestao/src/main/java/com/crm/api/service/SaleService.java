@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
+import com.crm.api.models.Item;
 import com.crm.api.models.ItemSale;
 import com.crm.api.models.Sale;
 
@@ -17,18 +18,33 @@ public class SaleService {
 	private ItemService itemService;
 	
 	public Sale createSale(Sale sale) {
-		List<ItemSale> items = sale.getItems();
+		Sale response = null;
 		
-		boolean checkItems = this.checkItems(items); 
-		//double totalSale = this.totalCalculate(items);
-		//sale.setTotal(totalSale);
-		return null;
+		List<ItemSale> items = sale.getItems();
+		sale.setStatus("In Progress");
+		
+		boolean checkItems = this.checkItems(items);
+		
+		return response;
 	}
 
 	private boolean checkItems(List<ItemSale> items) {
-		for(ItemSale item : items) {
+		boolean validation = false;
+		
+		for(ItemSale itemSale : items) {
+			Item item = itemSale.getItem();
+			long id = item.getId();
 			
+			Item itemToCheck = this.itemService.getItemById(id);
+			
+			if(itemToCheck != null) {
+				validation = true;
+			}
+			else {
+				validation = false;
+				break;
+			}
 		}
-		return true;
+		return validation;
 	}
 }
