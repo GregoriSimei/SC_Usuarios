@@ -35,6 +35,9 @@ public class Item {
 	@Column(name = "description")
 	private String description;
 	
+	@Column(name = "price")
+	private double price;
+	
 	@Column(name = "avgprice")
 	private double avgPrice;
 	
@@ -87,6 +90,14 @@ public class Item {
 		this.description = description;
 	}
 	
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
 	public double getAvgPrice() {
 		return avgPrice;
 	}
