@@ -23,12 +23,17 @@ public class SaleService {
 		List<ItemSale> items = sale.getItems();
 		sale.setStatus("In Progress");
 		
-		boolean checkItems = this.checkItems(items);
+		boolean checkItemsExist = this.checkItemsExist(items);
+		
+		if(checkItemsExist) {
+			double totalSale = this.totalCalculate(items);
+			sale.setTotal(totalSale);
+		}
 		
 		return response;
 	}
 
-	private boolean checkItems(List<ItemSale> items) {
+	private boolean checkItemsExist(List<ItemSale> items) {
 		boolean validation = false;
 		
 		for(ItemSale itemSale : items) {
@@ -46,5 +51,16 @@ public class SaleService {
 			}
 		}
 		return validation;
+	}
+
+	private double totalCalculate(List<ItemSale> items) {
+		double total = 0;
+		
+		for(ItemSale itemSale : items) {
+			Item item = itemSale.getItem();
+			total += item.getPrice();
+		}
+		
+		return total;
 	}
 }
