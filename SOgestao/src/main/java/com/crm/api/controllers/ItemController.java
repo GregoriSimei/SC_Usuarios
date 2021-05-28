@@ -38,4 +38,10 @@ public class ItemController {
 		return items;
 	}
 	
+	@GetMapping(produces = "application/json")
+	public Item getItemById(@RequestParam("id") long id) {
+		Item item = this.itemService.getItemById(id);
+		return item;
+	}
+	
 }

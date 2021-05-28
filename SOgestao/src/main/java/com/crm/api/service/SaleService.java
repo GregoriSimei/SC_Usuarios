@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.crm.api.models.Item;
 import com.crm.api.models.ItemSale;
 import com.crm.api.models.Sale;
+import com.crm.api.repositories.ItemSaleRepository;
 import com.crm.api.repositories.SaleRepository;
 
 @Service
@@ -21,6 +22,9 @@ public class SaleService {
 	@Autowired
 	private ItemService itemService;
 	
+	@Autowired
+	private ItemSaleRepository itemSaleRepository;
+	
 	public Sale createSale(Sale sale) {
 		Sale response = null;
 		
@@ -32,6 +36,7 @@ public class SaleService {
 		if(checkItems) {
 			double totalSale = this.totalCalculate(items);
 			sale.setTotal(totalSale);
+			this.itemSaleRepository.saveAll(items);
 			response = this.saleRepository.save(sale);
 		}
 		
