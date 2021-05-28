@@ -40,7 +40,7 @@ public class Sale {
 	@JoinColumn(name = "ss_id")
 	private Session session;
 	
-	@Column(name = "status")
+	@Column(name = "total")
 	private double total;
 
 	public long getId() {
