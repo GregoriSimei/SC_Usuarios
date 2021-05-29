@@ -24,5 +24,10 @@ public class SessionService {
 		
 		return session;
 	}
+	
+	public Session getById(long id) {
+		Session session = this.sessionRepository.findById(id).get();
+		return session;
+	}
 
 }
