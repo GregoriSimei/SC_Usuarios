@@ -15,11 +15,15 @@ public class SessionService {
 	
 	@Autowired
 	private SessionRepository sessionRepository;
+	
+	private final String ACTIVE = "Active";
+	private final String FINISHED = "Finished";
+	private final String INATIVE = "Inative";
 
 	public Session generateSession() {
 		Session session = new Session();
 		session.setDate(new Date());
-		session.setStatus("active");
+		session.setStatus(ACTIVE);
 		session = this.sessionRepository.save(session);
 		
 		return session;
@@ -27,6 +31,12 @@ public class SessionService {
 	
 	public Session getById(long id) {
 		Session session = this.sessionRepository.findById(id).get();
+		return session;
+	}
+
+	public Session finishSession(Session session) {
+		session.setStatus(FINISHED);
+		session = this.sessionRepository.save(session);
 		return session;
 	}
 

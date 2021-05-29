@@ -25,7 +25,7 @@ public class Sale {
 	private long id;
 	
 	@OneToMany
-	@JoinColumn(name = "its_id")
+	@JoinColumn(name = "sl_id")
 	@Fetch(FetchMode.JOIN)
 	private List<ItemSale> items;
 	

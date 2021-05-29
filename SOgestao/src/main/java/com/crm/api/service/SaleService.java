@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.crm.api.models.Item;
 import com.crm.api.models.ItemSale;
+import com.crm.api.models.Payment;
 import com.crm.api.models.Sale;
 import com.crm.api.models.Session;
 import com.crm.api.repositories.ItemSaleRepository;
@@ -29,6 +30,9 @@ public class SaleService {
 	
 	@Autowired
 	private ItemSaleService itemSaleService;
+	
+	@Autowired
+	private PaymentService paymentService;
 	
 	private final String IN_PROGRESS = "In Progress";
 	private final String PAYMENT_PENDING = "Payment Pending";
@@ -59,7 +63,7 @@ public class SaleService {
 		
 		List<ItemSale> items = sale.getItems();
 		
-		Sale response = sessionStatus.contentEquals("active")?
+		Sale response = sessionStatus.contentEquals("Active")?
 				(
 					this.checkItems(items)?
 						this.salesManager(sale):
@@ -72,14 +76,36 @@ public class SaleService {
 	
 	private Sale salesManager(Sale sale) {
 		String status = sale.getStatus();
-		sale = status.contentEquals(this.IN_PROGRESS) ?
-				this.updateProgress(sale):
-				null;
+		
+		if(status.contentEquals(this.IN_PROGRESS)) {
+			sale = this.updateProgress(sale);
+		}
+		else if(status.contentEquals(this.PAYMENT_PENDING)) {
+			sale = this.updatePaymentPending(sale);
+		}
+		
 		return sale;
 	}
 	
 	private Sale updateProgress(Sale sale) {
 		sale = this.persistDataSale(sale);
+		return sale;
+	}
+	
+	private Sale updatePaymentPending(Sale sale) {
+		List<ItemSale> items = sale.getItems();
+		double totalSale = this.totalCalculate(items);
+		sale.setTotal(totalSale);
+		
+		Payment payment = this.paymentService.save(sale);
+		sale.setPayment(payment);
+		
+		Session session = sale.getSession();
+		session = this.sessionService.finishSession(session);
+		sale.setSession(session);
+		
+		sale = this.persistDataSale(sale);
+		
 		return sale;
 	}
 	
@@ -122,7 +148,8 @@ public class SaleService {
 		
 		for(ItemSale itemSale : items) {
 			Item item = itemSale.getItem();
-			total += item.getPrice();
+			int qtd =  itemSale.getQtd();
+			total += item.getPrice() * qtd;
 		}
 		
 		return total;
