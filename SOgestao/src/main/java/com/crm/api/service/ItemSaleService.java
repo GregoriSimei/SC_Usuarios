@@ -17,7 +17,7 @@ public class ItemSaleService {
 	private ItemSaleRepository itemSaleRepository;
 	
 	public List<ItemSale> saveAll(List<ItemSale> items){
-		items = this.saveAll(items);
+		items = (List<ItemSale>) this.itemSaleRepository.saveAll(items);
 		return items;
 	}
 
