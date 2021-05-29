@@ -28,26 +28,25 @@ public class SaleService {
 	private SessionService sessionService;
 	
 	@Autowired
-	private ItemSaleRepository itemSaleRepository;
+	private ItemSaleService itemSaleService;
 	
-	private static String IN_PROGRESS = "In Progress";
+	private final String IN_PROGRESS = "In Progress";
+	private final String PAYMENT_PENDING = "Payment Pending";
+	private final String PAID_OUT = "Paid Out";
+	private final String CANCELED = "Canceled";
+	
 	
 	public Sale createSale(Sale sale) {
-		Sale response = null;
-		
 		List<ItemSale> items = sale.getItems();
 		sale.setStatus(this.IN_PROGRESS);
 		
 		boolean checkItems = this.checkItems(items);
 		
-		if(checkItems) {
-			double totalSale = this.totalCalculate(items);
-			sale.setTotal(totalSale);
-			this.itemSaleRepository.saveAll(items);
-			response = this.saleRepository.save(sale);
-		}
+		sale = checkItems ? 
+				this.persistDataSale(sale):
+				null;
 		
-		return response;
+		return sale;
 	}
 	
 	public Sale updateSale(Sale sale) {
@@ -58,8 +57,14 @@ public class SaleService {
 				null;
 		sale.setSession(session);
 		
+		List<ItemSale> items = sale.getItems();
+		
 		Sale response = sessionStatus.contentEquals("active")?
-				this.salesManager(sale):
+				(
+					this.checkItems(items)?
+						this.salesManager(sale):
+						null
+				):
 				null;
 		
 		return response;
@@ -67,7 +72,24 @@ public class SaleService {
 	
 	private Sale salesManager(Sale sale) {
 		String status = sale.getStatus();
-		return null;
+		sale = status.contentEquals(this.IN_PROGRESS) ?
+				this.updateProgress(sale):
+				null;
+		return sale;
+	}
+	
+	private Sale updateProgress(Sale sale) {
+		sale = this.persistDataSale(sale);
+		return sale;
+	}
+	
+	private Sale persistDataSale(Sale sale) {
+		List<ItemSale> items = sale.getItems();
+		double totalSale = this.totalCalculate(items);
+		sale.setTotal(totalSale);
+		this.itemSaleService.saveAll(items);
+		sale = this.saleRepository.save(sale);
+		return sale;
 	}
 
 	private boolean checkItems(List<ItemSale> items) {
