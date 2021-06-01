@@ -54,24 +54,33 @@ public class SaleService {
 	}
 	
 	public Sale updateSale(Sale sale) {
-		Session session = sale.getSession();
-		session = this.getDBSession(session);
-		String sessionStatus = session != null ? 
-				session.getStatus():
-				null;
-		sale.setSession(session);
+		sale = this.getDBSale(sale);
+		
+		boolean checkSession = sale != null ? 
+				this.checkSession(sale):
+				false;
 		
 		List<ItemSale> items = sale.getItems();
+		boolean checkItems = checkSession ? 
+								this.checkItems(items):
+								false;
 		
-		Sale response = sessionStatus.contentEquals("Active")?
-				(
-					this.checkItems(items)?
-						this.salesManager(sale):
-						null
-				):
-				null;
+		sale = checkSession &&
+			   checkItems ?
+					   this.salesManager(sale) :
+				       null;
 		
-		return response;
+		return sale;
+	}
+	
+	private boolean checkSession(Sale sale) {
+		Session session = sale.getSession();
+		String status = session.getStatus();
+		
+		boolean check = status.contentEquals("active") ||
+					    status.contentEquals("Finished");
+		
+		return check;
 	}
 	
 	private Sale salesManager(Sale sale) {
@@ -119,6 +128,12 @@ public class SaleService {
 		return sale;
 	}
 	
+	private Sale getDBSale(Sale sale) {
+		long id = sale.getId();
+		sale = this.saleRepository.findById(id).get();
+		return sale;
+	}
+	
 	private Sale persistDataSale(Sale sale) {
 		List<ItemSale> items = sale.getItems();
 		double totalSale = this.totalCalculate(items);
@@ -163,11 +178,5 @@ public class SaleService {
 		}
 		
 		return total;
-	}
-	
-	private Session getDBSession(Session session) {
-		long id = session.getId();
-		session = this.sessionService.getById(id);
-		return session;
 	}
 }
