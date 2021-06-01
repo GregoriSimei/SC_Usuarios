@@ -77,11 +77,14 @@ public class SaleService {
 	private Sale salesManager(Sale sale) {
 		String status = sale.getStatus();
 		
-		if(status.contentEquals(this.IN_PROGRESS)) {
+		if(status.contentEquals(IN_PROGRESS)) {
 			sale = this.updateProgress(sale);
 		}
-		else if(status.contentEquals(this.PAYMENT_PENDING)) {
+		else if(status.contentEquals(PAYMENT_PENDING)) {
 			sale = this.updatePaymentPending(sale);
+		}
+		else if(status.contentEquals(PAID_OUT)) {
+			sale = this.updatePaidOut(sale);
 		}
 		
 		return sale;
@@ -104,6 +107,13 @@ public class SaleService {
 		session = this.sessionService.finishSession(session);
 		sale.setSession(session);
 		
+		sale = this.persistDataSale(sale);
+		
+		return sale;
+	}
+	
+	private Sale updatePaidOut(Sale sale) {
+		sale.setStatus(PAID_OUT);
 		sale = this.persistDataSale(sale);
 		
 		return sale;
