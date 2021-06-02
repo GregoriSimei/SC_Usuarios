@@ -23,6 +23,9 @@ public class Payment {
 	
 	@Column(name = "status")
 	private String status;
+	
+	@Column(name = "value")
+	private double value;
 
 	public long getId() {
 		return id;
@@ -46,5 +49,13 @@ public class Payment {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public double getValue() {
+		return value;
+	}
+
+	public void setValue(double value) {
+		this.value = value;
 	}
 }

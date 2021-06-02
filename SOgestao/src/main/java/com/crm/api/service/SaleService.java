@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.crm.api.models.Item;
 import com.crm.api.models.ItemSale;
+import com.crm.api.models.Payment;
 import com.crm.api.models.Sale;
+import com.crm.api.models.Session;
 import com.crm.api.repositories.ItemSaleRepository;
 import com.crm.api.repositories.SaleRepository;
+import com.crm.api.repositories.SessionRepository;
 
 @Service
 @Configurable
@@ -23,24 +26,146 @@ public class SaleService {
 	private ItemService itemService;
 	
 	@Autowired
-	private ItemSaleRepository itemSaleRepository;
+	private SessionService sessionService;
+	
+	@Autowired
+	private ItemSaleService itemSaleService;
+	
+	@Autowired
+	private PaymentService paymentService;
+	
+	private final String IN_PROGRESS = "In Progress";
+	private final String PAYMENT_PENDING = "Payment Pending";
+	private final String PAID_OUT = "Paid Out";
+	private final String CANCELED = "Canceled";
+	
 	
 	public Sale createSale(Sale sale) {
-		Sale response = null;
-		
 		List<ItemSale> items = sale.getItems();
-		sale.setStatus("In Progress");
+		sale.setStatus(this.IN_PROGRESS);
 		
 		boolean checkItems = this.checkItems(items);
 		
-		if(checkItems) {
-			double totalSale = this.totalCalculate(items);
-			sale.setTotal(totalSale);
-			this.itemSaleRepository.saveAll(items);
-			response = this.saleRepository.save(sale);
+		sale = checkItems ? 
+				this.persistDataSale(sale):
+				null;
+		
+		return sale;
+	}
+	
+	public Sale updateSale(Sale sale) {
+		Sale saleDB = this.getDBSale(sale);
+		
+		boolean checkSession = saleDB != null ? 
+				this.checkSession(saleDB):
+				false;
+		
+		sale.setSession(
+				checkSession ? 
+						saleDB.getSession():
+						null
+				);
+		
+		List<ItemSale> items = sale.getItems();
+		boolean checkItems = checkSession ? 
+								this.checkItems(items):
+								false;
+		
+		System.out.println(saleDB != null);
+		System.out.println(checkSession);
+		System.out.println(checkItems);
+		
+		sale = checkSession &&
+			   checkItems ?
+					   this.salesManager(sale) :
+				       null;
+		
+		return sale;
+	}
+	
+	public Sale updatePaidOut(Sale sale) {
+		sale = this.getDBSale(sale);
+		sale.setStatus(PAID_OUT);
+		sale = this.persistDataSale(sale);
+		return sale;
+	}
+	
+	private boolean checkSession(Sale sale) {
+		Session session = sale.getSession();
+		String status = session.getStatus();
+		
+		boolean check = status.contentEquals("Active") ||
+						status.contentEquals("Finished");
+		
+		return check;
+	}
+	
+	private Sale salesManager(Sale sale) {
+		String status = sale.getStatus();
+		
+		if(status.contentEquals(IN_PROGRESS)) {
+			sale = this.updateProgress(sale);
+		}
+		else if(status.contentEquals(PAYMENT_PENDING)) {
+			sale = this.updatePaymentPending(sale);
+		}
+		else if(status.contentEquals(CANCELED)) {
+			sale = this.updateToCanceled(sale);
+		}
+		else {
+			sale = null;
 		}
 		
-		return response;
+		return sale;
+	}
+	
+	private Sale updateProgress(Sale sale) {
+		sale = this.persistDataSale(sale);
+		return sale;
+	}
+	
+	private Sale updatePaymentPending(Sale sale) {
+		List<ItemSale> items = sale.getItems();
+		double totalSale = this.totalCalculate(items);
+		sale.setTotal(totalSale);
+		
+		Payment payment = this.paymentService.save(sale);
+		sale.setPayment(payment);
+		
+		Session session = sale.getSession();
+		session = this.sessionService.finishSession(session);
+		sale.setSession(session);
+		
+		sale = this.persistDataSale(sale);
+		
+		return sale;
+	}
+	
+	private Sale updateToCanceled(Sale sale) {
+		sale.setStatus("canceled");
+		Session session = this.sessionService.cancelSession(sale.getSession());
+		sale.setSession(session);
+		sale = this.persistDataSale(sale);
+		return sale;
+	}
+	
+	private Session cancelSession() {
+		return null;
+	}
+	
+	private Sale getDBSale(Sale sale) {
+		long id = sale.getId();
+		sale = this.saleRepository.findById(id).get();
+		return sale;
+	}
+	
+	private Sale persistDataSale(Sale sale) {
+		List<ItemSale> items = sale.getItems();
+		double totalSale = this.totalCalculate(items);
+		sale.setTotal(totalSale);
+		this.itemSaleService.saveAll(items);
+		sale = this.saleRepository.save(sale);
+		return sale;
 	}
 
 	private boolean checkItems(List<ItemSale> items) {
@@ -73,7 +198,8 @@ public class SaleService {
 		
 		for(ItemSale itemSale : items) {
 			Item item = itemSale.getItem();
-			total += item.getPrice();
+			int qtd =  itemSale.getQtd();
+			total += item.getPrice() * qtd;
 		}
 		
 		return total;
