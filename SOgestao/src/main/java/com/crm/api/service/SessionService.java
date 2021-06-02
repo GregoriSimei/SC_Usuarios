@@ -18,7 +18,7 @@ public class SessionService {
 	
 	private final String ACTIVE = "Active";
 	private final String FINISHED = "Finished";
-	private final String INATIVE = "Inative";
+	private final String CLOSED = "Closed";
 
 	public Session generateSession() {
 		Session session = new Session();
@@ -36,6 +36,12 @@ public class SessionService {
 
 	public Session finishSession(Session session) {
 		session.setStatus(FINISHED);
+		session = this.sessionRepository.save(session);
+		return session;
+	}
+
+	public Session cancelSession(Session session) {
+		session.setStatus(CLOSED);
 		session = this.sessionRepository.save(session);
 		return session;
 	}

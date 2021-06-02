@@ -54,11 +54,17 @@ public class SaleService {
 	}
 	
 	public Sale updateSale(Sale sale) {
-		sale = this.getDBSale(sale);
+		Sale saleDB = this.getDBSale(sale);
 		
-		boolean checkSession = sale != null ? 
-				this.checkSession(sale):
+		boolean checkSession = saleDB != null ? 
+				this.checkSession(saleDB):
 				false;
+		
+		sale.setSession(
+				checkSession ? 
+						saleDB.getSession():
+						null
+				);
 		
 		List<ItemSale> items = sale.getItems();
 		boolean checkItems = checkSession ? 
@@ -73,12 +79,18 @@ public class SaleService {
 		return sale;
 	}
 	
+	public Sale updatePaidOut(Sale sale) {
+		sale = this.getDBSale(sale);
+		sale.setStatus(PAID_OUT);
+		sale = this.persistDataSale(sale);
+		return sale;
+	}
+	
 	private boolean checkSession(Sale sale) {
 		Session session = sale.getSession();
 		String status = session.getStatus();
 		
-		boolean check = status.contentEquals("active") ||
-					    status.contentEquals("Finished");
+		boolean check = status.contentEquals("active");
 		
 		return check;
 	}
@@ -92,8 +104,11 @@ public class SaleService {
 		else if(status.contentEquals(PAYMENT_PENDING)) {
 			sale = this.updatePaymentPending(sale);
 		}
-		else if(status.contentEquals(PAID_OUT)) {
-			sale = this.updatePaidOut(sale);
+		else if(status.contentEquals(CANCELED)) {
+			sale = this.updateToCanceled(sale);
+		}
+		else {
+			sale = null;
 		}
 		
 		return sale;
@@ -121,11 +136,16 @@ public class SaleService {
 		return sale;
 	}
 	
-	private Sale updatePaidOut(Sale sale) {
-		sale.setStatus(PAID_OUT);
+	private Sale updateToCanceled(Sale sale) {
+		sale.setStatus("canceled");
+		Session session = this.sessionService.cancelSession(sale.getSession());
+		sale.setSession(session);
 		sale = this.persistDataSale(sale);
-		
 		return sale;
+	}
+	
+	private Session cancelSession() {
+		return null;
 	}
 	
 	private Sale getDBSale(Sale sale) {
