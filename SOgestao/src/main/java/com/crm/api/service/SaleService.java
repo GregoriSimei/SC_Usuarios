@@ -71,6 +71,10 @@ public class SaleService {
 								this.checkItems(items):
 								false;
 		
+		System.out.println(saleDB != null);
+		System.out.println(checkSession);
+		System.out.println(checkItems);
+		
 		sale = checkSession &&
 			   checkItems ?
 					   this.salesManager(sale) :
@@ -90,7 +94,8 @@ public class SaleService {
 		Session session = sale.getSession();
 		String status = session.getStatus();
 		
-		boolean check = status.contentEquals("active");
+		boolean check = status.contentEquals("Active") ||
+						status.contentEquals("Finished");
 		
 		return check;
 	}
