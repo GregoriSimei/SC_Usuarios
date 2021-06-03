@@ -24,6 +24,7 @@ public class PaymentBusiness {
 	private SessionService sessionService;
 	
 	public Sale paidOut(Payment payment) {
+		payment = this.paymentService.paidOut(payment);
 		return null;
 	}
 }
