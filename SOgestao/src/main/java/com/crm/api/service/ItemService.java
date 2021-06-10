@@ -69,4 +69,9 @@ public class ItemService {
 		item.setQtd(qtd);
 		this.itemRepository.save(item);
 	}
+
+	public Deposit getDeposit(long id) {
+		Deposit deposit = this.itemRepository.findDepositById(id);
+		return deposit;
+	}
 }

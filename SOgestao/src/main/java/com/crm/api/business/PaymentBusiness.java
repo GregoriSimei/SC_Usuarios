@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import com.crm.api.models.ItemSale;
+import com.crm.api.models.Movement;
 import com.crm.api.models.Payment;
 import com.crm.api.models.Sale;
-import com.crm.api.models.Session;
-import com.crm.api.service.ItemSaleService;
 import com.crm.api.service.PaymentService;
 import com.crm.api.service.SaleService;
-import com.crm.api.service.SessionService;
 
 @Service
 @Configurable
@@ -26,7 +24,7 @@ public class PaymentBusiness {
 	private SaleService saleService;
 	
 	@Autowired
-	private ItemSaleService itemSaleService;
+	private MovementBusiness movementBusiness;
 	
 	public Sale paidOut(Payment payment) {
 		Sale sale = this.saleService.getDBSale(payment);
@@ -42,11 +40,20 @@ public class PaymentBusiness {
 		sale = this.saleService.updatePaidOut(sale);
 		
 		List<ItemSale> items = sale.getItems();
-		this.debitToProduct(items);
+		this.generateMovement(items);
 		return sale;
 	}
 	
-	private void debitToProduct(List<ItemSale> items) {
-		this.itemSaleService.debitProduct(items);
+	private void generateMovement(List<ItemSale> items) {
+		List<Movement> movements = this.movementBusiness
+				.generateMovement(
+						items, 
+						"Incoming", 
+						"Acquisition"
+				);
+		
+		for(Movement movement : movements) {
+			this.movementBusiness.saveMovement(movement);
+		}
 	}
 }

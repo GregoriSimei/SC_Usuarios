@@ -8,4 +8,5 @@ import com.crm.api.models.Deposit;
 public interface DepositRepository extends CrudRepository<Deposit, Long>{
 
 	Deposit findById(long id);
+	
 }

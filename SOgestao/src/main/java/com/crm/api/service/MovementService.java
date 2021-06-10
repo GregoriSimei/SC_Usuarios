@@ -1,5 +1,6 @@
 package com.crm.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import com.crm.api.models.Document;
+import com.crm.api.models.Item;
+import com.crm.api.models.ItemSale;
 import com.crm.api.models.Movement;
 import com.crm.api.repositories.MovementRepository;
 
@@ -71,5 +74,4 @@ public class MovementService {
 		this.movementRepository.save(movement);
 		return movement;
 	}
-	
 }

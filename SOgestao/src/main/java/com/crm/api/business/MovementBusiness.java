@@ -1,5 +1,8 @@
 package com.crm.api.business;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
@@ -7,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.crm.api.models.Deposit;
 import com.crm.api.models.Document;
 import com.crm.api.models.Item;
+import com.crm.api.models.ItemSale;
 import com.crm.api.models.Movement;
 import com.crm.api.repositories.MovementRepository;
 import com.crm.api.service.DepositService;
@@ -82,4 +86,28 @@ public class MovementBusiness {
 		return item;
 	}
 	
+	public List<Movement> generateMovement(List<ItemSale> items, String TYPE, String subType) {
+		List<Movement> movements = new ArrayList<Movement>();
+		
+		for (ItemSale itemSale: items) {
+			Item item = itemSale.getItem();
+			int qtd = itemSale.getQtd();
+			
+			Movement movement = new Movement();
+			movement.setItem(item);
+			movement.setQtd(qtd);
+			movement.setType(TYPE);
+			movement.setSubType(subType);
+			movement.setDeposit(this.getDepositByItemId(item));
+			
+			movements.add(movement);
+		}
+		return movements;
+	}
+	
+	private Deposit getDepositByItemId(Item item) {
+		long id = item.getId();
+		Deposit deposit = this.itemService.getDeposit(id);
+		return deposit;
+	}
 }
