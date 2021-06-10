@@ -84,7 +84,6 @@ public class SaleService {
 	}
 	
 	public Sale updatePaidOut(Sale sale) {
-		sale = this.getDBSale(sale);
 		sale.setStatus(PAID_OUT);
 		sale = this.persistDataSale(sale);
 		return sale;
@@ -149,8 +148,10 @@ public class SaleService {
 		return sale;
 	}
 	
-	private Session cancelSession(Session session) {
-		return this.sessionService.cancelSession(session);
+	public Sale getDBSale(Payment payment) {
+		long id = payment.getId();
+		Sale sale = this.saleRepository.getByPaymentId(id);
+		return sale;
 	}
 	
 	private Sale getDBSale(Sale sale) {
