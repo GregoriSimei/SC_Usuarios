@@ -63,5 +63,10 @@ public class ItemService {
 		this.depositRepository.save(deposit);
 		return item;
 	}
-	
+
+	public void debitItem(Item item, int qtd) {
+		qtd = item.getQtd() - qtd;
+		item.setQtd(qtd);
+		this.itemRepository.save(item);
+	}
 }
