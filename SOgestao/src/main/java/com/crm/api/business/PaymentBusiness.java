@@ -33,7 +33,7 @@ public class PaymentBusiness {
 		sale = sale != null ? 
 				this.paid(sale, payment):
 				null;
-		return null;
+		return sale;
 	}
 	
 	private Sale paid(Sale sale, Payment payment) {
