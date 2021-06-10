@@ -149,8 +149,8 @@ public class SaleService {
 		return sale;
 	}
 	
-	private Session cancelSession() {
-		return null;
+	private Session cancelSession(Session session) {
+		return this.sessionService.cancelSession(session);
 	}
 	
 	private Sale getDBSale(Sale sale) {
