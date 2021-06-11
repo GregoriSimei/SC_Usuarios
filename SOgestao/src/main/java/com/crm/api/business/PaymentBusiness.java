@@ -48,7 +48,7 @@ public class PaymentBusiness {
 		List<Movement> movements = this.movementBusiness
 				.generateMovement(
 						items, 
-						"Incoming", 
+						"Output", 
 						"Acquisition"
 				);
 		

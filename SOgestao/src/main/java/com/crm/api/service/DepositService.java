@@ -50,4 +50,8 @@ public class DepositService {
 		Deposit deposit = depositRepository.findById(id);
 		return deposit;
 	}
+
+	public Deposit getByItemId(long id) {
+		return this.depositRepository.findByItemsId(id);
+	}
 }

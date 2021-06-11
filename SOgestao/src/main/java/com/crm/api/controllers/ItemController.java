@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.crm.api.models.Deposit;
 import com.crm.api.models.Item;
 import com.crm.api.service.ItemService;
 
@@ -43,12 +42,5 @@ public class ItemController {
 	public Item getItemById(@RequestParam("id") long id) {
 		Item item = this.itemService.getItemById(id);
 		return item;
-	}
-	
-	@GetMapping(value = "/teste",produces = "application/json")
-	public Deposit getDeposit(@RequestParam("id") long id) {
-		return this.itemService
-				.getDeposit(id);
-	}
-	
+	}	
 }

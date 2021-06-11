@@ -71,7 +71,7 @@ public class ItemService {
 	}
 
 	public Deposit getDeposit(long id) {
-		Deposit deposit = this.itemRepository.findDepositById(id);
+		Deposit deposit = this.depositRepository.findById(id);
 		return deposit;
 	}
 }

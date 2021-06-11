@@ -107,7 +107,7 @@ public class MovementBusiness {
 	
 	private Deposit getDepositByItemId(Item item) {
 		long id = item.getId();
-		Deposit deposit = this.itemService.getDeposit(id);
+		Deposit deposit = this.itemService.getItemById(id);
 		return deposit;
 	}
 }

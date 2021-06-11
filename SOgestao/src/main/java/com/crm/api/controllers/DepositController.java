@@ -1,6 +1,7 @@
 package com.crm.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,11 @@ public class DepositController {
 	@PutMapping(consumes = "application/json", produces = "application/json")
 	public Branch updateDeposit(@RequestBody Deposit deposit, @RequestParam ("id") long idfilial ) {
 		return depositBusiness.saveDeposit(deposit, idfilial);
+	}
+	
+	@GetMapping(produces="application/json")
+	public Deposit getByItemId(@RequestParam long id) {
+		return this.depositBusiness.getByItemId(id);
 	}
 
 }

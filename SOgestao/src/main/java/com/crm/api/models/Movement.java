@@ -29,7 +29,7 @@ public class Movement {
 	private String description;
 	
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pd_id")
+	@JoinColumn(name = "it_id")
 	private Item item;
 	
 	@Column(name = "qtd")
