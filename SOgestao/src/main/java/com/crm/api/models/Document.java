@@ -14,7 +14,7 @@ public class Document {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
-	private long id;
+	private Long id;
 	
 	@Column(name = "name")
 	private String name;
@@ -22,11 +22,11 @@ public class Document {
 	@Column(name = "content")
 	private String content;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

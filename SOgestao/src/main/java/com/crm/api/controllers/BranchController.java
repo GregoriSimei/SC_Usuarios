@@ -33,9 +33,8 @@ public class BranchController {
 	}
 	
 	@DeleteMapping(consumes = "application/json", produces = "application/json")
-	public Branch deleteBranch(@RequestBody Branch branch) {
-		Branch response = branchService.deleteBranch(branch);
-		return response;
+	public void deleteBranch(@RequestBody Branch branch) {
+		branchService.deleteBranch(branch);
 	}
 
 }

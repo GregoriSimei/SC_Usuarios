@@ -8,7 +8,6 @@ import com.crm.api.models.Deposit;
 import com.crm.api.models.Document;
 import com.crm.api.models.Item;
 import com.crm.api.models.Movement;
-import com.crm.api.repositories.MovementRepository;
 import com.crm.api.service.DepositService;
 import com.crm.api.service.DocumentService;
 import com.crm.api.service.ItemService;

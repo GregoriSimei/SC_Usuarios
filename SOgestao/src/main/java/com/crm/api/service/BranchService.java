@@ -33,16 +33,15 @@ public class BranchService {
 	}
 	
 	public Branch updateBranch(Branch branch) {
-		Branch bra = branchRepository.findById(branch.getId());
+		Branch bra = branchRepository.findById(branch.getId()).get();
 		bra.setName(branch.getName());
 		branchRepository.save(bra);
 		return bra;
 		
 	}
 	
-	public Branch deleteBranch(Branch branch) {
-		return branchRepository.deleteById(branch.getId());
-		
+	public void deleteBranch(Branch branch) {
+		branchRepository.deleteById(branch.getId());
 	}
 
 }

@@ -21,5 +21,8 @@ public class UserController {
 		return users;
 	}
 	
+	public User save(User user) {
+		return this.userRepository.save(user);
+	}
 
 }

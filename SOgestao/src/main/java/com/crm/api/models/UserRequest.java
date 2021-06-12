@@ -18,7 +18,7 @@ public class UserRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
-	private long id;
+	private Long id;
 	
 	@Column(name = "status")
 	private String status;
@@ -33,11 +33,11 @@ public class UserRequest {
 	@JoinColumn(name = "pe_id")
 	private Person person;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
