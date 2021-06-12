@@ -16,7 +16,7 @@ import com.crm.api.repositories.UserRequestRepository;
 
 @Service
 @Configurable
-public class UserRequestBusiness {
+public class UserRequestService {
 	
 	@Autowired
 	private UserRequestRepository userRequestRepository;

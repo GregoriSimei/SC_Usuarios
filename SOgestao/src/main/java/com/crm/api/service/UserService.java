@@ -1,5 +1,7 @@
 package com.crm.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,14 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	public List<User> findAll(){
+		return this.userRepository
+					.findAllWhereStatus(true);
+	}
+	
 	public User save(User user) {
-		boolean validateFields = this.validateFields(user);
+		boolean validateFields = this
+					.validateFields(user);
 		user.setActive(true);
 		user = validateFields ? 
 				this.userRepository.save(user):
@@ -24,8 +32,19 @@ public class UserService {
 		return user;
 	}
 
-	public void delete(User user) {
-		this.userRepository.delete(user);
+	public boolean delete(User user) {
+		boolean exist = this.validateUser(user);
+		
+		user = exist ? 
+				this.desableUser(user):
+				null;
+		
+		return user != null;
+	}
+	
+	private User desableUser(User user) {
+		user.setActive(false);
+		return user;
 	}
 	
 	public boolean validateUser(User user) {

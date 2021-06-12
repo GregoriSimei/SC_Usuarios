@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.crm.api.models.Person;
 import com.crm.api.models.UserRequest;
-import com.crm.api.service.UserRequestBusiness;
+import com.crm.api.service.UserRequestService;
 
 @RestController
 @RequestMapping("/user_request")
 public class UserRequestController {
 
 	@Autowired
-	private UserRequestBusiness userRequestBusiness;
+	private UserRequestService userRequestBusiness;
 	
 	@GetMapping(produces = "application/json")
 	public Iterable<UserRequest> getAll(){
