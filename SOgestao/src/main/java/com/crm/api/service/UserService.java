@@ -15,10 +15,15 @@ public class UserService {
 	private UserRepository userRepository;
 	
 	public User save(User user) {
-		user = this.userRepository.save(user);
+		boolean validateFields = this.validateFields(user);
+		user.setActive(true);
+		user = validateFields ? 
+				this.userRepository.save(user):
+				null;
+		
 		return user;
 	}
-	
+
 	public void delete(User user) {
 		this.userRepository.delete(user);
 	}
@@ -53,6 +58,11 @@ public class UserService {
 		
 		return username1.contentEquals(username2) &&
 				password1.contentEquals(password2);
+	}
+	
+	private boolean validateFields(User user) {
+		return user.getPassword() != null &&
+			   user.getUsername() != null;
 	}
 	
 }
