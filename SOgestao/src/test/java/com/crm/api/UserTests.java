@@ -1,4 +1,4 @@
-package com.crm.api.user;
+package com.crm.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -20,7 +20,7 @@ import com.crm.api.service.UserService;
 
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
-public class Service {
+public class UserTests {
 	
 	@Autowired
 	private UserService userService;
