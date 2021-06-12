@@ -34,7 +34,7 @@ public class UserRequestTests {
 	public void createARequest() {
 		UserRequest request = new UserRequest();
 		request.setPerson(this.getPerson());
-		request = this.userRequestBusiness.saveRequest(request);
+		request = this.userRequestBusiness.createRequest(request);
 		requests.add(request);
 		
 		assertNotEquals(null, request);
@@ -43,7 +43,7 @@ public class UserRequestTests {
 	@Test
 	public void notIsPossibleToCreateARequestWithotAPerson() {
 		UserRequest request = new UserRequest();
-		request = this.userRequestBusiness.saveRequest(request);
+		request = this.userRequestBusiness.createRequest(request);
 		requests.add(request);
 		
 		assertNotEquals(null, request);
