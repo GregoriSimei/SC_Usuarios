@@ -168,4 +168,12 @@ public class UserRequestService {
 		return response;
 	}
 
+	public boolean checkFields(UserRequest request) {
+		return request.getPerson() != null;
+	}
+
+	public UserRequest save(UserRequest request) {
+		return this.userRequestRepository.save(request);
+	}
+
 }
