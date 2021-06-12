@@ -24,11 +24,30 @@ public class UserService {
 	public User save(User user) {
 		boolean validateFields = this
 					.validateFields(user);
-		user.setActive(true);
+		
 		user = validateFields ? 
-				this.userRepository.save(user):
+				this.saveOrUpdate(user):
 				null;
 		
+		return user;
+	}
+	
+	private User saveOrUpdate(User user) {
+		User userDB = this.findUserById(user);
+		
+		user = userDB != null ?
+				this.update(user):
+				this.create(user);
+		
+		return this.userRepository.save(user);
+	}
+	
+	private User create(User user) {
+		user.setActive(true);
+		return user;
+	}
+	
+	private User update(User user) {
 		return user;
 	}
 
