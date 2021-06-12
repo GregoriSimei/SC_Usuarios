@@ -144,6 +144,14 @@ public class UserTests {
 		assertEquals(validacao, false);
 	}
 	
+	@Test
+	public void activeFielsTurnToFalseWhenDeleteAnUser() {
+		User user = users.get(0);
+		boolean deleted = this.userService.delete(user);
+		
+		assertEquals(true, deleted);
+	}
+	
 	@AfterAll
 	public void removerDadosDoBanco() {
 		for(User user: users) {

@@ -18,7 +18,7 @@ public class UserService {
 	
 	public List<User> findAll(){
 		return this.userRepository
-					.findAllWhereStatus(true);
+					.findByActive(true);
 	}
 	
 	public User save(User user) {
@@ -39,11 +39,18 @@ public class UserService {
 				this.desableUser(user):
 				null;
 		
-		return user != null;
+		boolean active = user != null ? 
+				user.getActive():
+				true;
+		
+		boolean deleted = !active;
+		
+		return deleted;
 	}
 	
 	private User desableUser(User user) {
 		user.setActive(false);
+		user = this.userRepository.save(user);
 		return user;
 	}
 	
