@@ -10,5 +10,5 @@ import com.crm.api.models.User;
 public interface CompanyRepository extends CrudRepository<Company, Long>{
 	
 	Company findById(long id);
-
+	Company findByIdAndActive(long id, boolean active);
 }

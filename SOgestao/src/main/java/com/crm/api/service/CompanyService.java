@@ -24,6 +24,11 @@ public class CompanyService {
 		return company;
 	}
 	
+	public Company findById(Long id) {
+		return this.companyRepository
+				.findByIdAndActive(id, true);
+	}
+	
 	private Company update(Company company) {
 		return company;
 	}
