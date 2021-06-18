@@ -26,4 +26,13 @@ public class PersonService {
 		return person;
 	}
 
+	public Person getPerson(Person person) {
+		Long id = person.getId();
+		return this.findById(id);
+	}
+	
+	public Person findById(Long id) {
+		return this.personRepository.findById(id).get();
+	}
+
 }

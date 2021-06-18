@@ -64,4 +64,10 @@ public class UserRequestService {
 		return this.save(request);
 	}
 
+	public UserRequest requestNotApproved(UserRequest request) {
+		request.setModification(new Date());
+		request.setStatus(NOT_APPROVED);
+		return this.save(request);
+	}
+
 }
