@@ -31,6 +31,9 @@ public class Company {
 	@Fetch(FetchMode.JOIN)
 	private List<Branch> branches;
 	
+	@Column(name = "active")
+	private boolean active;
+	
 	public Long getId() {
 		return id;
 	}
@@ -57,5 +60,13 @@ public class Company {
 
 	public void setBranch(Branch branch) {
 		this.branches.add(branch);
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 }
