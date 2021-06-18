@@ -15,21 +15,23 @@ import com.crm.api.repositories.CompanyRepository;
 public class BranchService {
 	
 	@Autowired
-	private CompanyRepository companyRepository;
-	
-	@Autowired
 	private BranchRepository branchRepository;
+
+	private Branch save(Branch branch) {
+		branch = branch.getId() != null?
+				this.create(branch):
+				this.update(branch);
+		
+		return this.branchRepository
+				.save(branch);
+	}
 	
-	@Autowired
-	private AddressRepository addressRepository;
+	private Branch update(Branch branch) {
+		return branch;
+	}
 	
-	public Company setBranchesById(Branch branch,long id) {
-		Company response = companyRepository.findById(id);
-		addressRepository.save(branch.getAddress());
-		branchRepository.save(branch);
-		response.setBranch(branch);
-		companyRepository.save(response);
-		return response;
+	private Branch create(Branch branch) {
+		return branch;
 	}
 	
 	public Branch updateBranch(Branch branch) {
