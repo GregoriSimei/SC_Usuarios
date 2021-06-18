@@ -53,15 +53,23 @@ public class UserRequestBusiness {
 	
 	private UserRequest approvalOrNot(UserRequest request) {
 		String status = request.getStatus();
+		
 		if(status.contentEquals("Approved")) {
+			System.out.println("Se parou aqui, falhou em gerar usuario");
 			User user = this.generateUser(request);
+			System.out.println("Se parou aqui, falhou em savlar usuario");
 			user = this.userService.save(user);
 			request.getPerson().setUser(user);
+			System.out.println("Se parou aqui, falhou em salvar pessoa");
+			this.personService.save(request.getPerson());
+			System.out.println("Se parou aqui, falhou em salvar a request");
 			request = this.userRequestService.requestApproved(request);
+			System.out.println("Passou por tudo e criou");
 		}
 		else if(status.contentEquals("Not Approved")) {
 			request = this.userRequestService.requestNotApproved(request);
 		}
+		
 		return request;
 	}
 

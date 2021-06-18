@@ -45,6 +45,7 @@ public class UserService {
 	
 	private User create(User user) {
 		user.setActive(true);
+		System.out.println("Criouuuuu");
 		return user;
 	}
 	
@@ -112,8 +113,11 @@ public class UserService {
 	}
 
 	public User createUser(String name, Date birth) {
+		System.out.println("Se parou aqui, falhou em gerar username");
 		String username = this.generateUsername(name);
+		System.out.println("Se parou aqui, falhou em gerar email");
 		String email = this.generateEmail(name);
+		System.out.println("Se parou aqui, falhou em gerar senha");
 		String password = this.generatePassword(name, birth);
 		
 		User user = new User();
@@ -144,24 +148,28 @@ public class UserService {
 		Date date = new Date();
 		String username = ((String) name.subSequence(0, 1)) 
 				+ date.getYear();
+		
 		username = this.createUsername(username, 0);
 		
 		return username.toLowerCase();
 	}
 	
 	private String createUsername(String name, int num) {
-		name = num > 0? 
+		String username = num > 0? 
 				name+num:
 				name;
-		
+		System.out.println(username);
 		User user = this.userRepository
-				.findByUsername(name);
+				.findByUsername(username);
 		
 		if(user != null) {
-			this.createUsername(name, num++);
+			username = this.createUsername(name, num+1);
+			System.out.println(username);
 		}
 		
-		return name;
+		System.out.println(username);
+		
+		return username;
 	}
 	
 }

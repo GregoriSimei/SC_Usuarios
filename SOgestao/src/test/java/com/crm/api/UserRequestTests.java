@@ -75,7 +75,6 @@ public class UserRequestTests {
 	public void notIsPossibleToCreateARequestWithotAPerson() {
 		UserRequest request = new UserRequest();
 		request = this.userRequestBusiness.createRequest(request);
-		requests.add(request);
 		
 		assertEquals(null, request);
 	}
@@ -87,9 +86,7 @@ public class UserRequestTests {
 		
 		request = this.userRequestBusiness.updateRequest(request);
 		
-		User user = request.getPerson() != null ?
-				request.getPerson().getUser():
-				null;
+		User user = request.getPerson().getUser();
 		
 		boolean userCreated = user != null;
 		
@@ -98,20 +95,17 @@ public class UserRequestTests {
 	}
 	
 	@Test
-	public void notApproveRequestReturnAPersoWithotAnUserAndNotApprovedStatus() {
+	public void notApproveRequestReturnAPersonWithotAnUserAndNotApprovedStatus() {
 		UserRequest request = requests.get(0);
 		request.setStatus("Not Approved");
 		
 		request = this.userRequestBusiness.updateRequest(request);
 		
-		User user = request.getPerson() != null ?
-				request.getPerson().getUser():
-				null;
+		User user = request.getPerson().getUser();
 		
 		boolean userCreated = user != null;
 		
-		assertEquals(true, userCreated);
-		assertEquals(true, user.getActive());
+		assertEquals(false, userCreated);
 	}
 	
 	@AfterAll
