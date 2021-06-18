@@ -28,14 +28,12 @@ public class UserRequestController {
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public UserRequest salvaUsuario(@RequestBody Person person) {
-		UserRequest response = userRequestBusiness.createRequest(person);
-		return response;
+		return null;
 	}
 	
 	@PutMapping(consumes = "application/json", produces = "application/json")
 	public UserRequest approvalRequest(@RequestBody UserRequest request) {
-		UserRequest response = userRequestBusiness.validateRequest(request);	
-		return response;
+		return null;
 	}
 
 }
