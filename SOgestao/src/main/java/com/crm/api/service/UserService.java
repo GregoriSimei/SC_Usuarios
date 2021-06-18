@@ -1,5 +1,6 @@
 package com.crm.api.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,59 @@ public class UserService {
 	private boolean validateFields(User user) {
 		return user.getPassword() != null &&
 			   user.getUsername() != null;
+	}
+
+	public User createUser(String name, Date birth) {
+		String username = this.generateUsername(name);
+		String email = this.generateEmail(name);
+		String password = this.generatePassword(name, birth);
+		
+		User user = new User();
+		user.setActive(true);
+		user.setEmail(email);
+		user.setLevel("New");
+		user.setPassword(password);
+		user.setUsername(username);
+		
+		return user;
+	}
+	
+	private String generatePassword(String name, Date birth) {
+		return name.substring(0,1)
+				+ birth.getDay()
+				+ birth.getMonth()
+				+ birth.getYear();
+	}
+
+	private String generateEmail(String name) {
+		String[] names = name.split(" ");
+		int qtdNames = names.length;
+		String email = names[0] + "." + names[qtdNames -1] + "@company.com.br";
+		return email;
+	}
+
+	private String generateUsername(String name) {
+		Date date = new Date();
+		String username = ((String) name.subSequence(0, 1)) 
+				+ date.getYear();
+		username = this.createUsername(username, 0);
+		
+		return username.toLowerCase();
+	}
+	
+	private String createUsername(String name, int num) {
+		name = num > 0? 
+				name+num:
+				name;
+		
+		User user = this.userRepository
+				.findByUsername(name);
+		
+		if(user != null) {
+			this.createUsername(name, num++);
+		}
+		
+		return name;
 	}
 	
 }
