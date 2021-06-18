@@ -146,10 +146,17 @@ public class UserTests {
 	
 	@Test
 	public void activeFielsTurnToFalseWhenDeleteAnUser() {
+		
+		//Check Return true if deleted
 		User user = users.get(0);
 		boolean deleted = this.userService.delete(user);
 		
 		assertEquals(true, deleted);
+		
+		//Check persistence
+		user = this.userRepository.findById(user.getId()).get();
+		boolean active = user.getActive();
+		assertEquals(false, active);
 	}
 	
 	@AfterAll

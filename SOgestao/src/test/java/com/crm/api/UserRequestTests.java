@@ -1,11 +1,14 @@
 package com.crm.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -15,7 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.crm.api.business.UserRequestBusiness;
 import com.crm.api.models.Address;
 import com.crm.api.models.Person;
+import com.crm.api.models.User;
 import com.crm.api.models.UserRequest;
+import com.crm.api.repositories.AddressRepository;
+import com.crm.api.repositories.PersonRepository;
+import com.crm.api.repositories.UserRequestRepository;
 import com.crm.api.service.UserRequestService;
 
 @SpringBootTest
@@ -26,9 +33,32 @@ public class UserRequestTests {
 	private UserRequestBusiness userRequestBusiness;
 	
 	@Autowired
-	private UserRequestService UserRequestService;
+	private UserRequestRepository userRequestRepository;
+	
+	@Autowired
+	private AddressRepository addressRepository;
+	
+	@Autowired
+	private PersonRepository personRepository;
 	
 	private List<UserRequest> requests = new ArrayList<UserRequest>();
+	
+	@BeforeAll
+	public void createDataBase() {
+		Person person = this.getPerson();
+		Address address = person.getAddress();
+		
+		address = this.addressRepository.save(address);
+		this.personRepository.save(person);
+		
+		UserRequest request = new UserRequest();
+		request.setCreation(new Date());
+		request.setPerson(person);
+		request.setStatus("Pending Approval");
+		
+		request = this.userRequestRepository.save(request);
+		requests.add(request);
+	}
 	
 	@Test
 	public void createARequest() {
@@ -38,6 +68,7 @@ public class UserRequestTests {
 		requests.add(request);
 		
 		assertNotEquals(null, request);
+		assertEquals("Pending Approval", request.getStatus());
 	}
 	
 	@Test
@@ -46,7 +77,48 @@ public class UserRequestTests {
 		request = this.userRequestBusiness.createRequest(request);
 		requests.add(request);
 		
-		assertNotEquals(null, request);
+		assertEquals(null, request);
+	}
+	
+	@Test
+	public void approveRequestReturnAPersoWithAnActiveUser() {
+		UserRequest request = requests.get(0);
+		request.setStatus("Approved");
+		
+		request = this.userRequestBusiness.updateRequest(request);
+		
+		User user = request.getPerson() != null ?
+				request.getPerson().getUser():
+				null;
+		
+		boolean userCreated = user != null;
+		
+		assertEquals(true, userCreated);
+		assertEquals(true, user.getActive());
+	}
+	
+	@Test
+	public void notApproveRequestReturnAPersoWithotAnUserAndNotApprovedStatus() {
+		UserRequest request = requests.get(0);
+		request.setStatus("Not Approved");
+		
+		request = this.userRequestBusiness.updateRequest(request);
+		
+		User user = request.getPerson() != null ?
+				request.getPerson().getUser():
+				null;
+		
+		boolean userCreated = user != null;
+		
+		assertEquals(true, userCreated);
+		assertEquals(true, user.getActive());
+	}
+	
+	@AfterAll
+	public void clearDataBase() {
+		for(UserRequest request: requests) {
+			this.userRequestRepository.delete(request);
+		}
 	}
 	
 	private Person getPerson() {
