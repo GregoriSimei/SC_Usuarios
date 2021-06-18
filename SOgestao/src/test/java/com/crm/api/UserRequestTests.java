@@ -23,7 +23,6 @@ import com.crm.api.models.UserRequest;
 import com.crm.api.repositories.AddressRepository;
 import com.crm.api.repositories.PersonRepository;
 import com.crm.api.repositories.UserRequestRepository;
-import com.crm.api.service.UserRequestService;
 
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
