@@ -34,10 +34,6 @@ public class User {
 	@Column(name = "level")
 	private String level;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "br_id")
-	private Branch branch;
-	
 	public Long getId() {
 		return id;
 	}
@@ -76,14 +72,6 @@ public class User {
 	
 	public void setActive(Boolean active) {
 		this.active = active;
-	}
-
-	public Branch getBranch() {
-		return branch;
-	}
-
-	public void setBranch(Branch branch) {
-		this.branch = branch;
 	}
 
 	public String getLevel() {
