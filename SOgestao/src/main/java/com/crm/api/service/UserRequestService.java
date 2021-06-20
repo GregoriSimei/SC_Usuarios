@@ -43,6 +43,10 @@ public class UserRequestService {
 		Iterable<UserRequest> response = userRequestRepository.findAll();
 		return response;
 	}
+	
+	public UserRequest findById(Long id) {
+		return this.userRequestRepository.findById(id).get();
+	}
 
 	public boolean checkFields(UserRequest request) {
 		return request.getPerson() != null;
