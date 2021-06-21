@@ -29,56 +29,90 @@ public class MovementBusiness {
 	@Autowired
 	private DocumentService documentService;
 
-	public Movement saveMovement(Movement movement) {
+	public Movement createMovement(Movement movement) {
+		boolean checkFields = this.checkFields(movement);
+		boolean checkRelationship = checkFields ? 
+				this.checkRelationship(movement):
+				false;
 		
-		Deposit deposit = movement.getDeposit();
-		Item item = movement.getItem();
-		Document document = this.movementService.DocumentGenerate(movement);
-		
-		boolean testDeposit = deposit.getId() != 0;
-		if(testDeposit) {
-			long id = deposit.getId();
-			deposit = this.depositService.getById(id);
-		}
-		
-		boolean testItem = item.getId() != 0;
-		if(testItem) {
-			item = this.itemService.getItemById(item.getId());
-		}
-		
-		movement.setItem(item);
-		item = this.adjustItem(movement);
-		
-		this.documentService.save(document);
-		item = this.itemService.save(item);
-		
-		deposit.setItem(item);
-		
-		movement.setDoc(document);
-		movement.setDeposit(deposit);
-		movement = this.movementService.save(movement);
+		movement = checkRelationship ? 
+				this.movementManager(movement):
+				null;
 		
 		return movement;
 	}
 	
-	private Item adjustItem(Movement movement) {
-		String type = movement.getType();
-		int qtd = movement.getQtd();
-		Item item = movement.getItem();
-		int qtdItem = item.getQtd();
+	private Movement movementManager(Movement movement) {
+		Item item = this.updateItem(movement);
+		Deposit deposit = this.updateDeposit(movement);
 		
-		switch (type){
-			case "Incoming":
-				qtdItem += qtd;
-				break;
-			case "Output":
-				qtdItem -= qtd;
-				break;
-		}
-		
-		item.setQtd(qtdItem);
-		
-		return item;
+		return null;
 	}
 	
+	private Item updateItem(Movement movement) {
+		return null;
+	}
+	
+	private Deposit updateDeposit(Movement movement) {
+		return null;
+	}
+	
+	private boolean checkRelationship(Movement movement) {
+		Deposit deposit = movement.getDeposit();
+		Item item = movement.getItem();
+		
+		boolean checkItemOnDeposit = checkItemOnDeposit(item, deposit);
+		return checkItemOnDeposit;
+	}
+
+	private boolean checkItemOnDeposit(Item item, Deposit deposit) {
+		item = this.getItem(item);
+		deposit = this.getDeposit(deposit);
+		
+		for(Item itemDeposit : deposit.getItems()) {
+			if(itemDeposit.getId() == item.getId()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private Deposit getDeposit(Deposit deposit) {
+		Long id = deposit.getId();
+		return this.depositService.findById(id);
+	}
+	
+	private Item getItem(Item item) {
+		Long id = item.getId();
+		return this.itemService.findById(id);
+	}
+
+	private boolean checkFields(Movement movement) {
+		boolean checkMovement = this.checkMovementFields(movement);
+		boolean checkDeposit = this.checkDepositFields(movement);
+		boolean checkItem = this.checkItemFields(movement);
+		
+		return checkMovement &&
+			   checkDeposit &&
+			   checkItem;
+	}
+
+	private boolean checkItemFields(Movement movement) {
+		Item item = movement.getItem();
+		return item != null? 
+			item.getId() != null:
+			false;
+	}
+
+	private boolean checkDepositFields(Movement movement) {
+		Deposit deposit = movement.getDeposit();
+		return deposit != null?
+				deposit.getId() != null:
+				false;
+	}
+
+	private boolean checkMovementFields(Movement movement) {
+		return this.movementService.checkFields(movement);
+	}
 }
