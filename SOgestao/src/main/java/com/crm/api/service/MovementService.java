@@ -17,59 +17,26 @@ public class MovementService {
 	@Autowired
 	private MovementRepository movementRepository;
 	
+	public Movement save(Movement movement) {
+		return this.movementRepository.save(movement);
+	}
+	
+	public Movement findById(Long id) {
+		return this.movementRepository.findById(id).get();
+	}
+	
 	public List<Movement> getAll(Long id) {
 		List<Movement> movements = movementRepository.findByDepositId(id);
 		return movements;
-	}
-	
-	public Document DocumentGenerate(Movement movement) {
-		Document document = new Document();
-		
-		String type = movement.getType();
-		String subType = movement.getSubType();
-		String documentName = "";
-		
-		if(type.equalsIgnoreCase("Incoming")) {
-			switch (subType){
-				case "Acquisition":
-					documentName = "Purchase Note";
-					break;
-				case "Devolution":
-					documentName = "Devolution Note";
-					break;
-				case "Transfer":
-					documentName = "Transfer Note";
-					break;
-			}
-		}
-		else if(type.equalsIgnoreCase("Output")) {
-			switch (subType){
-				case "Acquisition":
-					documentName = "Bill of Sale";
-					break;
-				case "Devolution":
-					documentName = "Devolution Note";
-					break;
-				case "Transfer":
-					documentName = "Transfer Note";
-					break;
-				case "Consumption":
-					documentName = "Consumption Note";
-					break;
-				case "Theft":
-					documentName = "Theft Note";
-					break;
-			}
-		}
-		
-		document.setName(documentName);
-		
-		return document;
-	}
+	}	
 
-	public Movement save(Movement movement) {
-		this.movementRepository.save(movement);
-		return movement;
+	public boolean checkFields(Movement movement) {
+		return movement.getDeposit() != null &&
+			   movement.getDescription() != null &&
+			   movement.getDoc() != null &&
+			   movement.getItem() != null &&
+			   movement.getQtd() != 0 &&
+			   movement.getSubType() != null &&
+			   movement.getUser() != null;
 	}
-	
 }

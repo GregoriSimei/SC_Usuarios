@@ -29,32 +29,88 @@ public class MovementBusiness {
 	@Autowired
 	private DocumentService documentService;
 
+	private static String INCOMING = "Incoming";
+	private static String OUTPUT = "Output";
+	
 	public Movement createMovement(Movement movement) {
 		boolean checkFields = this.checkFields(movement);
+		boolean checkType = this.checkType(movement);
+		
+		boolean checkDocument = checkType && checkFields ? 
+				this.checkDocument(movement):
+				false;
+		
 		boolean checkRelationship = checkFields ? 
 				this.checkRelationship(movement):
 				false;
-		
-		movement = checkRelationship ? 
+	
+		movement = checkRelationship && checkDocument? 
 				this.movementManager(movement):
 				null;
 		
 		return movement;
 	}
-	
+
 	private Movement movementManager(Movement movement) {
 		Item item = this.updateItem(movement);
+		movement.setItem(item);
 		Deposit deposit = this.updateDeposit(movement);
+		movement.setDeposit(deposit);
 		
-		return null;
+		return this.saveMovement(movement);
 	}
 	
+	private Movement saveMovement(Movement movement) {
+		Item item = movement.getItem();
+		Deposit deposit = movement.getDeposit();
+		Document document = movement.getDoc();
+		
+		document = this.documentService.save(document);
+		
+		item = this.itemService.save(item);
+		
+		deposit = this.calculateDepositValue(deposit);
+		deposit = this.depositService.save(deposit);
+		
+		movement.setItem(item);
+		movement.setDeposit(deposit);
+		movement.setDoc(document);
+		movement = this.movementService.save(movement);
+		
+		return movement;
+	}
+
 	private Item updateItem(Movement movement) {
-		return null;
+		Item item = movement.getItem();
+		Item itemDB  = this.getItem(item);
+		
+		int qtd = this.qtdToMovement(movement);
+		
+		if(qtd > 0) {
+			double value = item.getPrice();
+			double valueDB = itemDB.getPrice();
+			double avg = (value + valueDB)/2;
+			
+			itemDB.setPrice(value);
+			itemDB.setAvgPrice(avg);
+		}
+		
+		qtd = itemDB.getQtd() + qtd;
+		itemDB.setQtd(qtd);
+		
+		return itemDB;
+	}
+	
+	private int qtdToMovement(Movement movement) {
+		return movement.getType()
+				.contentEquals(INCOMING) ? 
+						movement.getQtd():
+						-movement.getQtd();
 	}
 	
 	private Deposit updateDeposit(Movement movement) {
-		return null;
+		Deposit deposit = this.getDeposit(movement.getDeposit());
+		return deposit;
 	}
 	
 	private boolean checkRelationship(Movement movement) {
@@ -92,7 +148,7 @@ public class MovementBusiness {
 		boolean checkMovement = this.checkMovementFields(movement);
 		boolean checkDeposit = this.checkDepositFields(movement);
 		boolean checkItem = this.checkItemFields(movement);
-		
+
 		return checkMovement &&
 			   checkDeposit &&
 			   checkItem;
@@ -114,5 +170,60 @@ public class MovementBusiness {
 
 	private boolean checkMovementFields(Movement movement) {
 		return this.movementService.checkFields(movement);
+	}
+	
+	private boolean checkDocument(Movement movement) {
+		Document document = movement.getDoc();
+		boolean checkDoc = this.checkDocTitle(document, movement.getType());
+		return checkDoc;
+	}
+	
+	private boolean checkDocTitle(Document document, String type) {
+		boolean check = false;
+		
+		String[] incoming = new String[] {
+					"Purchase Note",
+					"Devolution Note",
+					"Transfer Note",
+					"Adjust"
+				};
+		String[] output = new String[] {
+					"Bill of Sale",
+					"Devolution Note",
+					"Transfer Note",
+					"Consumption Note",
+					"Theft Note",
+					"adjust"
+				};
+		
+		String[][] titles = new String[][] {incoming,output};
+		
+		int titlesNum = type.contentEquals(INCOMING) ? 0 : 1;
+		
+		for(String title : titles[titlesNum]) {
+			if(document.getTitle().contentEquals(title)) {
+				check = true;
+				break;
+			}
+		}
+		
+		return check;
+	}
+
+	private boolean checkType(Movement movement) {
+		return movement.getType().contentEquals(INCOMING) ||
+			   movement.getType().contentEquals(OUTPUT);
+	}
+	
+	private Deposit calculateDepositValue(Deposit deposit) {
+		double value = 0.0;
+		
+		for(Item item : deposit.getItems()) {
+			value += (item.getPrice() * item.getQtd());
+		}
+		
+		deposit.setTotalValue(value);
+		
+		return deposit;
 	}
 }
