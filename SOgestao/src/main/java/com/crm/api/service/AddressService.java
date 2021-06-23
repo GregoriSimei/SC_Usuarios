@@ -27,4 +27,7 @@ public class AddressService {
 		return address;
 	}
 
+	public Address findById(Long id) {
+		return this.addressRepository.findById(id).get();
+	}
 }
