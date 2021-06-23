@@ -6,43 +6,43 @@ import org.springframework.stereotype.Service;
 
 import com.crm.api.models.Branch;
 import com.crm.api.models.Company;
-import com.crm.api.repositories.AddressRepository;
 import com.crm.api.repositories.BranchRepository;
-import com.crm.api.repositories.CompanyRepository;
 
 @Service
 @Configurable
 public class BranchService {
 	
 	@Autowired
-	private CompanyRepository companyRepository;
-	
-	@Autowired
 	private BranchRepository branchRepository;
-	
-	@Autowired
-	private AddressRepository addressRepository;
-	
-	public Company setBranchesById(Branch branch,long id) {
-		Company response = companyRepository.findById(id);
-		addressRepository.save(branch.getAddress());
-		branchRepository.save(branch);
-		response.setBranch(branch);
-		companyRepository.save(response);
-		return response;
+
+	public Branch save(Branch branch) {
+		branch = branch.getId() != null?
+				this.create(branch):
+				this.update(branch);
+		
+		return this.branchRepository
+				.save(branch);
 	}
 	
-	public Branch updateBranch(Branch branch) {
-		Branch bra = branchRepository.findById(branch.getId());
-		bra.setName(branch.getName());
-		branchRepository.save(bra);
-		return bra;
-		
+	private Branch update(Branch branch) {
+		return branch;
 	}
 	
-	public Branch deleteBranch(Branch branch) {
-		return branchRepository.deleteById(branch.getId());
-		
+	private Branch create(Branch branch) {
+		return branch;
+	}
+	
+	public void deleteBranch(Branch branch) {
+		branchRepository.deleteById(branch.getId());
+	}
+
+	public boolean checkFields(Branch branch) {
+		return branch.getAddress() != null &&
+			   branch.getName() != null;
+	}
+
+	public Branch findById(Long id) {
+		return this.branchRepository.findById(id).get();
 	}
 
 }

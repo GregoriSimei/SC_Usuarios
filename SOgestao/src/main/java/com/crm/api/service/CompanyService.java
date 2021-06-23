@@ -15,10 +15,36 @@ public class CompanyService {
 	private CompanyRepository companyRepository;
 	
 
-	public Company saveCompany(Company company) {
-		Company response = companyRepository.save(company);
-		return response;
+	public Company save(Company company) {
+		company = company.getId() != null?
+				this.update(company):
+				this.create(company);
+		
+		company = companyRepository.save(company);
+		return company;
 	}
 	
+	public Company findById(Long id) {
+		return this.companyRepository
+				.findByIdAndActive(id, true);
+	}
+	
+	private Company update(Company company) {
+		return company;
+	}
+	
+	private Company create(Company company) {
+		company.setActive(true);
+		return company;
+	}
+	
+	public Company delete(Company company) {
+		company.setActive(false);
+		return company;
+	}
+	
+	public boolean checkFields(Company company) {
+		return company.getName() != null;
+	}
 	
 }
