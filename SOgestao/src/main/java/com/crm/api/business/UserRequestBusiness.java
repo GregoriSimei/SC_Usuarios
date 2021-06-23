@@ -122,9 +122,8 @@ public class UserRequestBusiness {
 	
 	private UserRequest saveRequest(UserRequest request) {
 		Person person = request.getPerson();
-		Address address = person.getAddress();
-		this.saveAddress(address);
-		this.savePerson(person);
+		person = this.savePerson(person);
+		request.setPerson(person);
 		return this.userRequestService.save(request);
 	}
 	
@@ -132,7 +131,11 @@ public class UserRequestBusiness {
 		return this.addressService.save(address);
 	}
 	
-	private Person savePerson(Person person) {
+	public Person savePerson(Person person) {
+		Address address = person.getAddress();
+		this.saveAddress(address);
+		person.setAddress(address);
+		
 		return this.personService.save(person);
 	}
 

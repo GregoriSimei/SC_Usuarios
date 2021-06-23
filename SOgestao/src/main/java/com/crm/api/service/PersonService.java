@@ -35,4 +35,12 @@ public class PersonService {
 		return this.personRepository.findById(id).get();
 	}
 
+	public Person update(Person person) {
+		person = person.getId() != null?
+				this.save(person):
+				null;
+		
+		return person;
+	}
+
 }
