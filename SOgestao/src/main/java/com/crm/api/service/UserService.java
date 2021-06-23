@@ -45,7 +45,6 @@ public class UserService {
 	
 	private User create(User user) {
 		user.setActive(true);
-		System.out.println("Criouuuuu");
 		return user;
 	}
 	
@@ -95,6 +94,12 @@ public class UserService {
 						.findById(id)
 						.get() :
 					null;
+	}
+	
+	public User findUserById(Long id) { 
+		return userRepository
+						.findById(id)
+						.get();
 	}
 	
 	private boolean compareUsers(User user1, User user2) {
