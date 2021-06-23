@@ -1,6 +1,7 @@
 package com.crm.api.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -19,13 +20,12 @@ public class SessionService {
 	private final String ACTIVE = "Active";
 	private final String FINISHED = "Finished";
 	private final String CLOSED = "Closed";
-
-	public Session generateSession() {
+	
+	public Session generate() {
 		Session session = new Session();
 		session.setDate(new Date());
 		session.setStatus(ACTIVE);
 		session = this.sessionRepository.save(session);
-		
 		return session;
 	}
 	
@@ -34,16 +34,20 @@ public class SessionService {
 		return session;
 	}
 
-	public Session finishSession(Session session) {
+	public Session finish(Session session) {
 		session.setStatus(FINISHED);
 		session = this.sessionRepository.save(session);
 		return session;
 	}
 
-	public Session cancelSession(Session session) {
+	public Session cancel(Session session) {
 		session.setStatus(CLOSED);
 		session = this.sessionRepository.save(session);
 		return session;
 	}
 
+	public List<Session> getActiveSession(){
+		String[] status = new String[] {ACTIVE,FINISHED};
+		return this.sessionRepository.findByStatus(status);
+	}
 }

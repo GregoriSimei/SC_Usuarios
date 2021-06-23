@@ -16,8 +16,8 @@ public class Document {
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "name")
-	private String name;
+	@Column(name = "title")
+	private String title;
 	
 	@Column(name = "content")
 	private String content;
@@ -30,12 +30,12 @@ public class Document {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getContent() {
