@@ -37,5 +37,10 @@ public class ItemService {
 			   item.getType() != null &&
 			   item.getValidity() != null;
 	}
-	
+
+	public void debitItem(Item item, int qtd) {
+		qtd = item.getQtd() - qtd;
+		item.setQtd(qtd);
+		this.itemRepository.save(item);
+	}
 }

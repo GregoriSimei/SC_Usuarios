@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
-import com.crm.api.models.Document;
 import com.crm.api.models.Movement;
 import com.crm.api.repositories.MovementRepository;
 

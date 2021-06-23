@@ -18,6 +18,7 @@ public class PaymentService {
 	private PaymentRepository paymentRepository;
 	
 	private final String PAYMENT_PENDING = "Payment Pending";
+	private final String PAID = "Paid Out";
 	
 	public Payment save(Payment payment) {
 		payment = this.paymentRepository.save(payment);
@@ -35,5 +36,30 @@ public class PaymentService {
 		
 		return payment;
 	}
+
+	public Payment paidOut(Payment payment) {
+		payment = this.paymentDB(payment);
+		payment = payment != null?
+					this.paid(payment):
+					payment;
+					
+		return payment;
+	}
 	
+	private Payment paid(Payment payment) {
+		payment.setStatus(PAID);
+		payment = this.paymentPersist(payment);
+		return payment;
+	}
+	
+	private Payment paymentPersist(Payment payment) {
+		payment = this.paymentRepository.save(payment);
+		return payment;
+	}
+	
+	private Payment paymentDB(Payment payment) {
+		long id = payment.getId();
+		payment = this.paymentRepository.findById(id).get();
+		return payment;
+	}
 }

@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Configurable
-public class SaleBusiness {
+public class PaymentBusiness {
 	
 }

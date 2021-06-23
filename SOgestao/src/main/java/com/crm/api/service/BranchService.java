@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import com.crm.api.models.Branch;
-import com.crm.api.models.Company;
 import com.crm.api.repositories.BranchRepository;
 
 @Service
@@ -42,7 +41,8 @@ public class BranchService {
 	}
 
 	public Branch findById(Long id) {
-		return this.branchRepository.findById(id).get();
+		Branch branch = this.branchRepository.findById(id).get();
+		return branch;
 	}
 
 }
