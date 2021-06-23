@@ -17,7 +17,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
-	private long id;
+	private Long id;
 	
 	@Column(name = "username")
 	private String username;
@@ -34,15 +34,11 @@ public class User {
 	@Column(name = "level")
 	private String level;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "br_id")
-	private Branch branch;
-	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
@@ -76,14 +72,6 @@ public class User {
 	
 	public void setActive(Boolean active) {
 		this.active = active;
-	}
-
-	public Branch getBranch() {
-		return branch;
-	}
-
-	public void setBranch(Branch branch) {
-		this.branch = branch;
 	}
 
 	public String getLevel() {

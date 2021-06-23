@@ -22,7 +22,7 @@ public class Sale {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
-	private long id;
+	private Long id;
 	
 	@OneToMany
 	@JoinColumn(name = "sl_id")
@@ -43,11 +43,11 @@ public class Sale {
 	@Column(name = "total")
 	private double total;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
