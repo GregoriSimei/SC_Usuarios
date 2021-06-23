@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.crm.api.business.ItemBusiness;
 import com.crm.api.models.Item;
+import com.crm.api.service.ItemService;
 
 @RestController
 @RequestMapping("/item")
@@ -20,26 +21,26 @@ public class ItemController {
 	@Autowired
 	private ItemBusiness itemBusiness;
 	
+	@Autowired
+	private ItemService itemService;
+	
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public Item create(@RequestBody Item item,@RequestParam("id") Long depositId) {
 		return this.itemBusiness.createItem(item, depositId);
 	}
 
 	@PutMapping(consumes = "application/json", produces = "application/json")
-	public Item update(Item object) {
-		// TODO Auto-generated method stub
-		return null;
+	public Item update(@RequestBody Item item) {
+		return this.itemService.update(item);
 	}
 
 	@GetMapping(produces = "application/json")
-	public Item getById(Item id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Item getById(@RequestParam("id") Long id) {
+		return this.itemService.findById(id);
 	}
 
 	@DeleteMapping(consumes = "application/json", produces = "application/json")
 	public boolean delete(Item object) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

@@ -18,6 +18,14 @@ public class ItemService {
 		return this.itemRepository.save(item);
 	}
 	
+	public Item update(Item item) {
+		item = item.getId() != null ?
+				this.save(item):
+				null;
+		
+		return item;
+	}
+	
 	public Item findById(long id) {
 		Item item = this.itemRepository.findById(id);
 		return item;
