@@ -18,5 +18,9 @@ public class DocumentService {
 		document = this.documentRepository.save(document);
 		return document;
 	}
+	
+	public Document findById(Long id) {
+		return this.documentRepository.findById(id).get();
+	}
 
 }
