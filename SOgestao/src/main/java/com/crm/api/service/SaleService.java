@@ -21,8 +21,8 @@ public class SaleService {
 	
 	public Sale save(Sale sale) {
 		sale = sale.getId() != null?
-			this.create(sale):
-			this.update(sale);
+			this.update(sale):
+			this.create(sale);
 		
 		return this.saleRepository.save(sale);
 	}
@@ -48,6 +48,10 @@ public class SaleService {
 			   status.contentEquals(PAYMENT_PENDING) ||
 			   status.contentEquals(PAID_OUT) ||
 			   status.contentEquals(CANCELED);
+	}
+
+	public boolean checkFields(Sale sale) {
+		return sale.getItems() != null;
 	}
 	
 }

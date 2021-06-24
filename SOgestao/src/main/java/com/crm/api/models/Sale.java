@@ -1,5 +1,6 @@
 package com.crm.api.models;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -42,6 +43,17 @@ public class Sale {
 	
 	@Column(name = "total")
 	private double total;
+	
+	@Column(name = "date")
+	private Date date;
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
 	public Long getId() {
 		return id;

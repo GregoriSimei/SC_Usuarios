@@ -32,5 +32,4 @@ public class ItemSaleService {
 			this.itemService.debitItem(item, qtd);
 		}
 	}
-
 }
