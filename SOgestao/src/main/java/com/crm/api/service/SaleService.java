@@ -14,10 +14,13 @@ public class SaleService {
 	@Autowired
 	private SaleRepository saleRepository;
 	
-	private final String IN_PROGRESS = "In Progress";
-	private final String PAYMENT_PENDING = "Payment Pending";
-	private final String PAID_OUT = "Paid Out";
-	private final String CANCELED = "Canceled";
+	private static String IN_PROGRESS = "In Progress";
+	private static String PAYMENT_PENDING = "Payment Pending";
+	private static String CANCELED = "Canceled";
+	private static String PAID_OUT = "Paid Out";
+	private static String DELIVERY_PENDING = "Delivery Pending";
+	private static String DELIVERED = "Delivered";
+	private static String DEVOLUTION = "Devolution";
 	
 	public Sale save(Sale sale) {
 		sale = sale.getId() != null?
@@ -47,13 +50,19 @@ public class SaleService {
 		return status.contentEquals(IN_PROGRESS) ||
 			   status.contentEquals(PAYMENT_PENDING) ||
 			   status.contentEquals(PAID_OUT) ||
-			   status.contentEquals(CANCELED);
+			   status.contentEquals(CANCELED) || 
+			   status.contentEquals(DELIVERY_PENDING) ||
+			   status.contentEquals(DELIVERED);
 	}
 
 	public boolean checkFields(Sale sale) {
 		return sale.getItems() != null &&
 			   sale.getClient() != null &&
 			   sale.getUser() != null;
+	}
+
+	public Sale findByNoteId(Long noteId) {
+		return this.saleRepository.findByNoteId(noteId);
 	}
 	
 }

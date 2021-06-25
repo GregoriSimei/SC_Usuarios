@@ -5,4 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import com.crm.api.models.Sale;
 
 public interface SaleRepository extends CrudRepository<Sale, Long>{
+
+	Sale findByNoteId(Long noteId);
 }

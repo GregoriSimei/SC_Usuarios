@@ -7,14 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
+import com.crm.api.models.Deposit;
+import com.crm.api.models.Document;
 import com.crm.api.models.Invoice;
 import com.crm.api.models.Item;
 import com.crm.api.models.ItemSale;
+import com.crm.api.models.Movement;
 import com.crm.api.models.Person;
 import com.crm.api.models.PromissoryNote;
 import com.crm.api.models.Sale;
 import com.crm.api.models.Session;
 import com.crm.api.models.User;
+import com.crm.api.service.DepositService;
 import com.crm.api.service.InvoiceService;
 import com.crm.api.service.ItemSaleService;
 import com.crm.api.service.ItemService;
@@ -54,6 +58,12 @@ public class SaleBusiness {
 	
 	@Autowired
 	private InvoiceService invoiceService;
+	
+	@Autowired
+	private DepositService depositService;
+	
+	@Autowired
+	private MovementBusiness movementBusiness;
 	
 	private static String IN_PROGRESS = "In Progress";
 	private static String PAYMENT_PENDING = "Payment Pending";
@@ -374,22 +384,94 @@ public class SaleBusiness {
 	}
 
 	private Sale updatePaidOut(Sale sale) {
-		// checar se o status e possivel
-		// check se os items estao corretos
-		// checkar se sessao esta aberta
-		// calcular tudo 
-		// Fechar sessao - closed
-		// salvar
-		
-		return null;
+		Session session = sale.getSession();
+		session = session != null ?
+				this.sessionService.cancel(session):
+				null;
+		sale.setSession(session);
+		return sale;
 	}
 	
 	
 	private Sale updateDeliveryPending(Sale sale) {
-		// TODO Auto-generated method stub
-		return null;
+		boolean checkPayment = this.checkPayment(sale);
+		if(checkPayment) {
+			this.generateMovements(sale);
+			sale = this.getSale(sale);
+			sale.setStatus(DELIVERY_PENDING);
+		}
+		else {
+			sale = null;
+		}
+		
+		return sale;
 	}
 	
+
+	private boolean checkPayment(Sale sale) {
+		sale = this.getSale(sale);
+		PromissoryNote note = sale.getNote();
+		String status = note != null ?
+				note.getStatus():
+				"Empty";
+		return status.contentEquals("Open");
+	}
+
+	private void generateMovements(Sale sale) {
+		List<ItemSale> items = sale.getItems();
+		
+		for(ItemSale item : items) {
+			Deposit deposit = this.getDeposit(item);
+			Movement movement = this.createMovement(item.getItem(), deposit, sale.getUser(), item.getQtd());
+			this.movementBusiness.createMovement(movement);
+		}
+	}
+
+	private Movement createMovement(Item item, Deposit deposit, User user, int qtd) {
+		Movement movement = new Movement();
+		movement.setDeposit(deposit);
+		movement.setItem(item);
+		movement.setUser(user);
+		movement.setQtd(qtd);
+		movement.setType("Output");
+		movement.setSubType("Bill of Sale");
+		movement.setDescription("Vendido pelo usuario " + user.getUsername());
+		Document doc = this.generateDocumentSale(movement);
+		movement.setDoc(doc);
+		
+		return movement;
+	}
+
+	private Document generateDocumentSale(Movement movement) {
+		Document document = new Document();
+		document.setTitle(movement.getSubType());
+		document.setContent("Venda de " + movement.getQtd() + " unidade(s) de " + movement.getItem().getName());
+		return document;
+	}
+
+	private Deposit getDeposit(ItemSale itemSale) {
+		List<Deposit> deposits = this.depositService.findAll();
+		boolean validation = false;
+		Item itemToTest = itemSale.getItem();
+		Deposit depositFound = null;
+		
+		for(Deposit deposit : deposits) {
+			List<Item> items = deposit.getItems();
+			
+			for(Item item: items) {
+				validation = item.getId() == itemToTest.getId();
+				if(validation) {
+					depositFound = deposit;
+					break;
+				}
+			}
+			if(validation) {
+				break;
+			}
+		}
+		
+		return depositFound;
+	}
 
 	private Sale updateDelivered(Sale sale) {
 		// TODO Auto-generated method stub

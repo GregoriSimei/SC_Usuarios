@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.crm.api.business.SaleBusiness;
 import com.crm.api.models.Sale;
+import com.crm.api.service.SaleService;
 
 @RestController
 @RequestMapping("/sale")
@@ -18,6 +20,9 @@ public class SaleController {
 	
 	@Autowired
 	private SaleBusiness saleBusiness;
+	
+	@Autowired
+	private SaleService saleService;
 	
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	public Sale create(@RequestBody Sale sale) {
@@ -30,9 +35,8 @@ public class SaleController {
 	}
 
 	@GetMapping(produces = "application/json")
-	public Sale getById(Sale id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Sale getById(@RequestParam("id") Long id) {
+		return this.saleService.findById(id);
 	}
 
 	@DeleteMapping(consumes = "application/json", produces = "application/json")
