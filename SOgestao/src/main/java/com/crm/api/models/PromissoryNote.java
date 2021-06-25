@@ -40,8 +40,8 @@ public class PromissoryNote {
 	@Column(name = "duedate")
 	private Date dueDate;
 	
-	@Column(name = "create")
-	private Date create;
+	@Column(name = "creation")
+	private Date creation;
 	
 	@Column(name = "modification")
 	private Date modification;
@@ -126,12 +126,12 @@ public class PromissoryNote {
 		this.invoice = invoice;
 	}
 
-	public Date getCreate() {
-		return create;
+	public Date getCreation() {
+		return creation;
 	}
 
-	public void setCreate(Date create) {
-		this.create = create;
+	public void setCreation(Date create) {
+		this.creation = create;
 	}
 
 	public Date getModification() {
