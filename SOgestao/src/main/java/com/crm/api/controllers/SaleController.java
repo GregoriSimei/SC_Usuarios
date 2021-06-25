@@ -25,9 +25,8 @@ public class SaleController {
 	}
 
 	@PutMapping(consumes = "application/json", produces = "application/json")
-	public Sale update(Sale object) {
-		// TODO Auto-generated method stub
-		return null;
+	public Sale update(Sale sale) {
+		return this.saleBusiness.save(sale);
 	}
 
 	@GetMapping(produces = "application/json")

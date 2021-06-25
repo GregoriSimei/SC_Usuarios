@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.crm.api.models.Item;
 import com.crm.api.models.ItemSale;
+import com.crm.api.models.Person;
 import com.crm.api.models.Sale;
 import com.crm.api.models.Session;
+import com.crm.api.models.User;
 import com.crm.api.service.ItemSaleService;
 import com.crm.api.service.ItemService;
+import com.crm.api.service.PersonService;
 import com.crm.api.service.SaleService;
 import com.crm.api.service.SessionService;
+import com.crm.api.service.UserService;
 
 @Service
 @Configurable
@@ -32,7 +36,19 @@ public class SaleBusiness {
 	@Autowired
 	private ItemSaleService itemSaleService;
 	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private PersonService personService;
+	
 	private static String IN_PROGRESS = "In Progress";
+	private static String PAYMENT_PENDING = "Payment Pending";
+	private static String CANCELED = "Canceled";
+	private static String PAID_OUT = "Paid Out";
+	private static String DELIVERY_PENDING = "Delivery Pending";
+	private static String DELIVERED = "Delivered";
+	private static String DEVOLUTION = "Devolution";
 	
 	public Sale save(Sale sale) {
 		sale = sale.getId() != null ?
@@ -48,8 +64,8 @@ public class SaleBusiness {
 
 	private Sale saveAll(Sale sale) {
 		sale = this.saveItems(sale);
+		sale.setUpdate(new Date());
 		sale = this.saleService.save(sale);
-		
 		return sale;
 	}
 
@@ -63,12 +79,36 @@ public class SaleBusiness {
 	private Sale create(Sale sale) {
 		boolean checkFields = this.checkFields(sale);
 		boolean checkItems = checkFields ? this.checkitems(sale): false;
+		boolean checkClient = checkFields ? this.checkClient(sale) : false;
+		boolean checkUser = checkFields ? this.checkUser(sale) : false;
 		
-		sale = checkItems ?
+		sale = checkItems && checkClient && checkUser ?
 				this.generateSale(sale):
 				null;
 		
 		return sale;
+	}
+
+	private boolean checkUser(Sale sale) {
+		User user = sale.getUser();
+		user = this.getUser(user);
+		return user != null;
+	}
+
+	private User getUser(User user) {
+		Long id = user.getId();
+		return this.userService.findUserById(id);
+	}
+
+	private boolean checkClient(Sale sale) {
+		Person client = sale.getPerson();
+		client = this.getClient(client);
+		return client != null;
+	}
+
+	private Person getClient(Person client) {
+		Long id = client.getId();
+		return this.personService.findById(id);
 	}
 
 	private boolean checkitems(Sale sale) {
@@ -91,7 +131,7 @@ public class SaleBusiness {
 		Session session = this.generateSession();
 		sale.setSession(session);
 		sale.setStatus(IN_PROGRESS);
-		sale.setDate(new Date());
+		sale.setStart(new Date());
 		sale = this.calculateTotal(sale);
 		
 		return sale;
@@ -161,8 +201,168 @@ public class SaleBusiness {
 	private boolean checkSaleFields(Sale sale) {
 		return this.saleService.checkFields(sale);
 	}
+	
+	private boolean checkSession(Sale sale) {
+		Session session = sale.getSession();
+		session = this.getSession(session);
+		return session.getStatus().contentEquals("Open") ||
+			   session.getStatus().contentEquals("Finished");
+	}	
+
+	private Session getSession(Session session) {
+		Long id = session.getId();
+		return this.sessionService.getById(id);
+	}
+
+	private Sale getSale(Sale sale) {
+		Long id = sale.getId();
+		return this.saleService.findById(id);
+	}
 
 	private Sale update(Sale sale) {
+		boolean checkFields = this.checkFields(sale);
+		boolean checkStatus = this.checkStatus(sale);
+		boolean checkItems = checkFields ? this.checkitems(sale): false;
+		boolean checkSaleExist = this.getSale(sale) != null ? true:false;
+		boolean checkUpdateStatus = this.checkStatusToUpdate(sale);
+		boolean checkSesion = this.checkSession(sale);
+		
+		sale = checkFields &&
+			   checkStatus &&
+			   checkItems  &&
+			   checkUpdateStatus &&
+			   checkSaleExist &&
+			   checkSesion?
+					   this.updateManager(sale):
+					   null;
+			   
+		sale = sale != null ? 
+				this.saveAll(sale):
+				sale;
+			   
+		return sale;
+	}
+
+	private Sale updateManager(Sale sale) {
+		String status = sale.getStatus();
+		
+		if(status.contentEquals(IN_PROGRESS)) {
+			sale = this.updateInProgress(sale);
+		}
+		else if(status.contentEquals(PAYMENT_PENDING)) {
+			sale = this.updatePaymentPending(sale);
+		}
+		else if(status.contentEquals(CANCELED)) {
+			sale = this.updateCanceled(sale);
+		}
+		else if(status.contentEquals(PAID_OUT)){
+			sale = this.updatePaidOut(sale);
+		}
+		else if(status.contentEquals(DELIVERY_PENDING)){
+			sale = this.updateDeliveryPending(sale);
+		}
+		else if(status.contentEquals(DELIVERED)){
+			sale = this.updateDelivered(sale);
+		}
+		else {
+			sale = null;
+		}
+		
+		sale = sale != null ? this.prepareToUpdate(sale) : null;
+		
+		return sale;
+	}
+
+	private Sale prepareToUpdate(Sale sale) {
+		sale = this.setItems(sale);
+		sale = this.calculateTotal(sale);
+		return sale;
+	}
+
+	private Sale updateInProgress(Sale sale) {
+		return sale;
+	}
+
+	private Sale updatePaymentPending(Sale sale) {
+		// Gerar titulo
+		// Finalizar a sessao sessao - finished
 		return null;
+	}
+	
+	private Sale updateCanceled(Sale sale) {
+		// checar se o status e possivel
+		// check se os items estao corretos
+		// Finalizar a sessao
+		// mudar status para closed
+		
+		return null;
+	}
+	
+
+	private Sale updatePaidOut(Sale sale) {
+		// checar se o status e possivel
+		// check se os items estao corretos
+		// checkar se sessao esta aberta
+		// calcular tudo 
+		// Fechar sessao - closed
+		// salvar
+		
+		return null;
+	}
+	
+	
+	private Sale updateDeliveryPending(Sale sale) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
+	private Sale updateDelivered(Sale sale) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private boolean checkStatus(Sale sale) {
+		return sale.getStatus().contentEquals(IN_PROGRESS) ||
+			   sale.getStatus().contentEquals(PAYMENT_PENDING) ||
+			   sale.getStatus().contentEquals(CANCELED) || 
+			   sale.getStatus().contentEquals(DELIVERY_PENDING) ||
+			   sale.getStatus().contentEquals(DELIVERED) ||
+			   sale.getStatus().contentEquals(DEVOLUTION);
+	}
+	
+	private boolean checkStatusToUpdate(Sale sale) {
+		String newStatus = sale.getStatus();
+		
+		Sale oldSale = this.getSale(sale);
+		String oldStatus = oldSale.getStatus();
+		
+		boolean validation = false;
+		
+		if(oldStatus.contentEquals(IN_PROGRESS)) {
+			validation = newStatus.contentEquals(PAYMENT_PENDING) ||
+						 newStatus.contentEquals(CANCELED);
+		}
+		else if(oldStatus.contentEquals(PAYMENT_PENDING)) {
+			validation = newStatus.contentEquals(CANCELED) ||
+					 	 newStatus.contentEquals(PAID_OUT);
+		}
+		else if(oldStatus.contentEquals(CANCELED)) {
+			validation = false;
+		}
+		else if(oldStatus.contentEquals(PAID_OUT)){
+			validation = newStatus.contentEquals(CANCELED) ||
+					 	 newStatus.contentEquals(DELIVERY_PENDING);
+		}
+		else if(oldStatus.contentEquals(DELIVERY_PENDING)){
+			validation = newStatus.contentEquals(CANCELED) ||
+				 	 	 newStatus.contentEquals(DELIVERED);
+		}
+		else if(oldStatus.contentEquals(DELIVERED)){
+			validation = newStatus.contentEquals(CANCELED) ||
+				 	 	 newStatus.contentEquals(DEVOLUTION);
+		}
+		
+		return validation;
 	}
 }

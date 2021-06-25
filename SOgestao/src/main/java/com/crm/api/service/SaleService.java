@@ -51,7 +51,9 @@ public class SaleService {
 	}
 
 	public boolean checkFields(Sale sale) {
-		return sale.getItems() != null;
+		return sale.getItems() != null &&
+			   sale.getPerson() != null &&
+			   sale.getUser() != null;
 	}
 	
 }

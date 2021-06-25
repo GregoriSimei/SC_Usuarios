@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -44,15 +45,50 @@ public class Sale {
 	@Column(name = "total")
 	private double total;
 	
-	@Column(name = "date")
-	private Date date;
+	@Column(name = "start")
+	private Date start;
+	
+	@Column(name = "update")
+	private Date update;
+	
+	@ManyToOne
+	@JoinColumn(name = "cl_id")
+	private Person person;
+	
+	@ManyToOne
+	@JoinColumn(name = "us_id")
+	private User user;
 
-	public Date getDate() {
-		return date;
+	public Date getUpdate() {
+		return update;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setUpdate(Date update) {
+		this.update = update;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Date getStart() {
+		return start;
+	}
+
+	public void setStart(Date start) {
+		this.start = start;
 	}
 
 	public Long getId() {
