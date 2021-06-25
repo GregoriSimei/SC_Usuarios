@@ -18,6 +18,7 @@ import com.crm.api.models.User;
 import com.crm.api.service.InvoiceService;
 import com.crm.api.service.ItemSaleService;
 import com.crm.api.service.ItemService;
+import com.crm.api.service.NoteService;
 import com.crm.api.service.PersonService;
 import com.crm.api.service.SaleService;
 import com.crm.api.service.SessionService;
@@ -47,6 +48,9 @@ public class SaleBusiness {
 	
 	@Autowired
 	private NoteBusiness noteBusiness;
+	
+	@Autowired
+	private NoteService noteService;
 	
 	@Autowired
 	private InvoiceService invoiceService;
@@ -342,14 +346,32 @@ public class SaleBusiness {
 	}
 
 	private Sale updateCanceled(Sale sale) {
-		// checar se o status e possivel
-		// check se os items estao corretos
-		// Finalizar a sessao
-		// mudar status para closed
-		
-		return null;
+		sale = this.getSale(sale);
+		sale.setStatus(CANCELED);
+		sale = this.cancelNote(sale);
+		sale = this.closeSession(sale);
+		return sale;
 	}
 	
+
+	private Sale closeSession(Sale sale) {
+		Session session = sale.getSession();
+		session = session != null ?
+				this.sessionService.cancel(session):
+				null;
+		sale.setSession(session);
+		return sale;
+	}
+
+	private Sale cancelNote(Sale sale) {
+		PromissoryNote note = sale.getNote();
+		note = note != null? 
+				this.noteService.cancel(note):
+				null;
+		
+		sale.setNote(note);
+		return sale;
+	}
 
 	private Sale updatePaidOut(Sale sale) {
 		// checar se o status e possivel

@@ -27,5 +27,11 @@ public class NoteService {
 	public PromissoryNote findById(Long id) {
 		return this.noteRepository.findById(id).get();
 	}
+
+	public PromissoryNote cancel(PromissoryNote note) {
+		note.setStatus("Closed");
+		note = this.save(note);
+		return note;
+	}
 	
 }
