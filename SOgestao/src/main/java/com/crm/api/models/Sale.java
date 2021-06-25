@@ -135,4 +135,12 @@ public class Sale {
 	public void setTotal(double total) {
 		this.total = total;
 	}
+
+	public PromissoryNote getNote() {
+		return note;
+	}
+
+	public void setNote(PromissoryNote note) {
+		this.note = note;
+	}
 }

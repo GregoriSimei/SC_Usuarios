@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
+import com.crm.api.models.Invoice;
 import com.crm.api.models.Item;
 import com.crm.api.models.ItemSale;
 import com.crm.api.models.Person;
+import com.crm.api.models.PromissoryNote;
 import com.crm.api.models.Sale;
 import com.crm.api.models.Session;
 import com.crm.api.models.User;
+import com.crm.api.service.InvoiceService;
 import com.crm.api.service.ItemSaleService;
 import com.crm.api.service.ItemService;
 import com.crm.api.service.PersonService;
@@ -41,6 +44,12 @@ public class SaleBusiness {
 	
 	@Autowired
 	private PersonService personService;
+	
+	@Autowired
+	private NoteBusiness noteBusiness;
+	
+	@Autowired
+	private InvoiceService invoiceService;
 	
 	private static String IN_PROGRESS = "In Progress";
 	private static String PAYMENT_PENDING = "Payment Pending";
@@ -229,15 +238,6 @@ public class SaleBusiness {
 		boolean checkClient = checkFields ? this.checkClient(sale) : false;
 		boolean checkUser = checkFields ? this.checkUser(sale) : false;
 		
-		System.out.println(checkFields);
-		System.out.println(checkStatus);
-		System.out.println(checkItems);
-		System.out.println(checkSaleExist);
-		System.out.println(checkUpdateStatus);
-		System.out.println(checkSesion);
-		System.out.println(checkClient);
-		System.out.println(checkUser);
-		
 		sale = checkFields &&
 			   checkStatus &&
 			   checkItems  &&
@@ -257,7 +257,6 @@ public class SaleBusiness {
 	}
 
 	private Sale updateManager(Sale sale) {
-		System.out.println("Validado com sucesso");
 		
 		String status = sale.getStatus();
 		
@@ -299,11 +298,49 @@ public class SaleBusiness {
 	}
 
 	private Sale updatePaymentPending(Sale sale) {
-		// Gerar titulo
-		// Finalizar a sessao sessao - finished
-		return null;
+		boolean checkNote = this.checkNote(sale);
+		PromissoryNote note = sale.getNote();
+		note.setTotal(sale.getTotal());
+		note = this.noteBusiness.create(note);
+		sale.setNote(note);
+		sale = note != null ? 
+				this.generateInvoice(sale):
+				null;
+		sale = sale != null ?
+				this.finishSession(sale):
+				null;
+		
+		return sale;
 	}
-	
+
+	private Sale finishSession(Sale sale) {
+		Session session = sale.getSession();
+		session = this.sessionService.finish(session);
+		sale.setSession(session);
+		return sale;
+	}
+
+	private Sale generateInvoice(Sale sale) {
+		Invoice invoice = new Invoice();
+		invoice.setClient(sale.getClient());
+		invoice.setItems(sale.getItems());
+		invoice.setValue(sale.getTotal());
+		invoice.setCompany("Coisas & Coisas");
+		invoice = this.invoiceService.save(invoice);
+		
+		PromissoryNote note = sale.getNote();
+		note.setInvoice(invoice);
+
+		sale.setNote(note);
+
+		return sale;
+	}
+
+	private boolean checkNote(Sale sale) {
+		PromissoryNote note = sale.getNote();
+		return note != null;
+	}
+
 	private Sale updateCanceled(Sale sale) {
 		// checar se o status e possivel
 		// check se os items estao corretos

@@ -46,6 +46,12 @@ public class PromissoryNote {
 	@Column(name = "modification")
 	private Date modification;
 	
+	@Column(name = "installments")
+	private int installments;
+	
+	@Column(name = "cur_installment")
+	private int currentInstallment;
+	
 	@OneToMany
 	@JoinColumn(name = "pn_id")
 	private List<NoteMovement> movements;
@@ -140,5 +146,21 @@ public class PromissoryNote {
 
 	public void setModification(Date modification) {
 		this.modification = modification;
+	}
+
+	public int getInstallments() {
+		return installments;
+	}
+
+	public void setInstallments(int installments) {
+		this.installments = installments;
+	}
+
+	public int getCurrentInstallment() {
+		return currentInstallment;
+	}
+
+	public void setCurrentInstallment(int currentInstallment) {
+		this.currentInstallment = currentInstallment;
 	}
 }
