@@ -10,9 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "payments")
-public class Payment {
-
+@Table(name = "note_movement")
+public class NoteMovement {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
@@ -21,8 +21,8 @@ public class Payment {
 	@Column(name = "date")
 	private Date date;
 	
-	@Column(name = "status")
-	private String status;
+	@Column(name = "type")
+	private String type;
 	
 	@Column(name = "value")
 	private double value;
@@ -43,12 +43,12 @@ public class Payment {
 		this.date = date;
 	}
 
-	public String getStatus() {
-		return status;
+	public String getType() {
+		return type;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public double getValue() {

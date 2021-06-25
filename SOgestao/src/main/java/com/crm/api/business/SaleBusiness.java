@@ -64,7 +64,7 @@ public class SaleBusiness {
 
 	private Sale saveAll(Sale sale) {
 		sale = this.saveItems(sale);
-		sale.setUpdate(new Date());
+		sale.setModification(new Date());
 		sale = this.saleService.save(sale);
 		return sale;
 	}
@@ -101,7 +101,7 @@ public class SaleBusiness {
 	}
 
 	private boolean checkClient(Sale sale) {
-		Person client = sale.getPerson();
+		Person client = sale.getClient();
 		client = this.getClient(client);
 		return client != null;
 	}
@@ -205,7 +205,7 @@ public class SaleBusiness {
 	private boolean checkSession(Sale sale) {
 		Session session = sale.getSession();
 		session = this.getSession(session);
-		return session.getStatus().contentEquals("Open") ||
+		return session.getStatus().contentEquals("Active") ||
 			   session.getStatus().contentEquals("Finished");
 	}	
 
@@ -226,13 +226,26 @@ public class SaleBusiness {
 		boolean checkSaleExist = this.getSale(sale) != null ? true:false;
 		boolean checkUpdateStatus = this.checkStatusToUpdate(sale);
 		boolean checkSesion = this.checkSession(sale);
+		boolean checkClient = checkFields ? this.checkClient(sale) : false;
+		boolean checkUser = checkFields ? this.checkUser(sale) : false;
+		
+		System.out.println(checkFields);
+		System.out.println(checkStatus);
+		System.out.println(checkItems);
+		System.out.println(checkSaleExist);
+		System.out.println(checkUpdateStatus);
+		System.out.println(checkSesion);
+		System.out.println(checkClient);
+		System.out.println(checkUser);
 		
 		sale = checkFields &&
 			   checkStatus &&
 			   checkItems  &&
 			   checkUpdateStatus &&
 			   checkSaleExist &&
-			   checkSesion?
+			   checkSesion &&
+			   checkClient &&
+			   checkUser ?
 					   this.updateManager(sale):
 					   null;
 			   
@@ -244,6 +257,8 @@ public class SaleBusiness {
 	}
 
 	private Sale updateManager(Sale sale) {
+		System.out.println("Validado com sucesso");
+		
 		String status = sale.getStatus();
 		
 		if(status.contentEquals(IN_PROGRESS)) {
@@ -341,7 +356,8 @@ public class SaleBusiness {
 		
 		if(oldStatus.contentEquals(IN_PROGRESS)) {
 			validation = newStatus.contentEquals(PAYMENT_PENDING) ||
-						 newStatus.contentEquals(CANCELED);
+						 newStatus.contentEquals(CANCELED) ||
+						 newStatus.contentEquals(IN_PROGRESS);
 		}
 		else if(oldStatus.contentEquals(PAYMENT_PENDING)) {
 			validation = newStatus.contentEquals(CANCELED) ||

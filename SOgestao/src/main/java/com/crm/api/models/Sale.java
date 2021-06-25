@@ -35,8 +35,8 @@ public class Sale {
 	private String status;
 	
 	@OneToOne
-	@JoinColumn(name = "pay_id")
-	private Payment payment;
+	@JoinColumn(name = "nt_id")
+	private PromissoryNote note;
 	
 	@OneToOne
 	@JoinColumn(name = "ss_id")
@@ -48,31 +48,31 @@ public class Sale {
 	@Column(name = "start")
 	private Date start;
 	
-	@Column(name = "update")
-	private Date update;
+	@Column(name = "modification")
+	private Date modification;
 	
 	@ManyToOne
 	@JoinColumn(name = "cl_id")
-	private Person person;
+	private Person client;
 	
 	@ManyToOne
 	@JoinColumn(name = "us_id")
 	private User user;
 
-	public Date getUpdate() {
-		return update;
+	public Date getModification() {
+		return modification;
 	}
 
-	public void setUpdate(Date update) {
-		this.update = update;
+	public void setModification(Date modification) {
+		this.modification = modification;
 	}
 
-	public Person getPerson() {
-		return person;
+	public Person getClient() {
+		return client;
 	}
 
-	public void setPerson(Person person) {
-		this.person = person;
+	public void setClient(Person client) {
+		this.client = client;
 	}
 
 	public User getUser() {
@@ -118,14 +118,6 @@ public class Sale {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public Payment getPayment() {
-		return payment;
-	}
-
-	public void setPayment(Payment payment) {
-		this.payment = payment;
 	}
 
 	public Session getSession() {
