@@ -91,18 +91,35 @@ public class PaymentBusiness {
 	}
 
 	private NoteMovement movementCreation(NoteMovement movement, Long noteId) {
-		// checkar data de vencimento
 		PromissoryNote note = this.getNote(noteId);
 		movement.setDate(new Date());
 		boolean checkDateToOpen = this.checkDateToOpen(note, movement);
 		boolean checkValue = this.checkValuePaid(note, movement);
 		
-		// mudar nota para aberto
+		note = this.notePaid(note);
+		
 		note = checkDateToOpen && checkValue ?
 				this.openNote(note, noteId):
 				null;
 		
 		return movement;
+	}
+
+	private PromissoryNote notePaid(PromissoryNote note) {
+		int currentInstallment = note.getCurrentInstallment();
+		int installments = note.getInstallments();
+		
+		if(currentInstallment == installments) {
+			note.setStatus("Closed");
+		}
+		else if(currentInstallment > installments) {
+			note.setCurrentInstallment(currentInstallment++);
+		}
+		else {
+			note = null;
+		}
+		
+		return note;
 	}
 
 	private boolean checkValuePaid(PromissoryNote note, NoteMovement movement) {
