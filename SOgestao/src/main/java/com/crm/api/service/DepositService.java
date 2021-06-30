@@ -1,5 +1,7 @@
 package com.crm.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
@@ -39,5 +41,9 @@ public class DepositService {
 
 	public boolean checkFields(Deposit deposit) {
 		return deposit.getName() != null;
+	}
+
+	public List<Deposit> findAll() {
+		return (List<Deposit>) this.depositRepository.findAll();
 	}
 }

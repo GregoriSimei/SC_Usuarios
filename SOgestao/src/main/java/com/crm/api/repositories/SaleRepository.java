@@ -6,5 +6,5 @@ import com.crm.api.models.Sale;
 
 public interface SaleRepository extends CrudRepository<Sale, Long>{
 
-	Sale getByPaymentId(long id);
+	Sale findByNoteId(Long noteId);
 }

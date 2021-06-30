@@ -1,5 +1,6 @@
 package com.crm.api.models;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -33,8 +35,8 @@ public class Sale {
 	private String status;
 	
 	@OneToOne
-	@JoinColumn(name = "pay_id")
-	private Payment payment;
+	@JoinColumn(name = "nt_id")
+	private PromissoryNote note;
 	
 	@OneToOne
 	@JoinColumn(name = "ss_id")
@@ -42,6 +44,52 @@ public class Sale {
 	
 	@Column(name = "total")
 	private double total;
+	
+	@Column(name = "start")
+	private Date start;
+	
+	@Column(name = "modification")
+	private Date modification;
+	
+	@ManyToOne
+	@JoinColumn(name = "cl_id")
+	private Person client;
+	
+	@ManyToOne
+	@JoinColumn(name = "us_id")
+	private User user;
+
+	public Date getModification() {
+		return modification;
+	}
+
+	public void setModification(Date modification) {
+		this.modification = modification;
+	}
+
+	public Person getClient() {
+		return client;
+	}
+
+	public void setClient(Person client) {
+		this.client = client;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Date getStart() {
+		return start;
+	}
+
+	public void setStart(Date start) {
+		this.start = start;
+	}
 
 	public Long getId() {
 		return id;
@@ -72,14 +120,6 @@ public class Sale {
 		this.status = status;
 	}
 
-	public Payment getPayment() {
-		return payment;
-	}
-
-	public void setPayment(Payment payment) {
-		this.payment = payment;
-	}
-
 	public Session getSession() {
 		return session;
 	}
@@ -94,5 +134,13 @@ public class Sale {
 
 	public void setTotal(double total) {
 		this.total = total;
+	}
+
+	public PromissoryNote getNote() {
+		return note;
+	}
+
+	public void setNote(PromissoryNote note) {
+		this.note = note;
 	}
 }
